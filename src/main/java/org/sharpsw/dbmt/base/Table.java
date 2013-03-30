@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.sharpsw.dbmt.support.Visitable;
-
-public class Table implements Visitable {
+public class Table {
 	private String name;
 	private List<Column> columns;
 	private List<PrimaryKey> primaryKeys;

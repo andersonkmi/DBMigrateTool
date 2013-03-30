@@ -1,8 +1,6 @@
 package org.sharpsw.dbmt.base;
 
-import org.sharpsw.dbmt.support.Visitable;
-
-public class Column implements Cloneable, Visitable {
+public class Column implements Cloneable {
 	private String name;
 	private boolean isAutoIncrement;
 	private boolean isNullable;
@@ -34,7 +32,7 @@ public class Column implements Cloneable, Visitable {
 		this.position = 0;
 	}
 	
-	public Column(String name, boolean isAutoIncrement, boolean isNullable, int dataType, String defaultValue, int length, int precision, int position) {
+	public Column(final String name, boolean isAutoIncrement, boolean isNullable, int dataType, final String defaultValue, int length, int precision, int position) {
 		this.name = name;
 		this.isAutoIncrement = isAutoIncrement;
 		this.isNullable = isNullable;

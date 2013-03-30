@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.sharpsw.dbmt.support.Visitable;
-
-public class Database implements Visitable {
+public class Database {
 	private String productName;
 	private String productVersion;
 	private int majorVersion;
