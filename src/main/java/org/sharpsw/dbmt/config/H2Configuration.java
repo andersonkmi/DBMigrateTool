@@ -1,20 +1,7 @@
 package org.sharpsw.dbmt.config;
 
-public class H2Configuration implements IDatabaseConfiguration {
-	
-	@Override
-	public String getConnectionString() {
-		return null;
-	}
-
-	@Override
-	public DatabaseVendor getDatabaseVendor() {
-		return null;
-	}
-
-	@Override
-	public String getDriverClassName() {
-		return null;
-	}
-
+public class H2Configuration extends BaseDatabaseConfiguration {
+    public H2Configuration(final String connectionString, final DatabaseVendor vendor, final String driverClass) {
+        super(connectionString, vendor, driverClass);
+    }
 }

@@ -4,7 +4,13 @@ public abstract class BaseDatabaseConfiguration implements IDatabaseConfiguratio
 	private String connectionString;
 	private DatabaseVendor vendor;
 	private String driverClassName;
-	
+
+    public BaseDatabaseConfiguration(final String connectionString, final DatabaseVendor vendor, final String driverClassName) {
+        this.connectionString = connectionString;
+        this.vendor = vendor;
+        this.driverClassName = driverClassName;
+    }
+
 	@Override
 	public String getConnectionString() {
         return this.connectionString;
