@@ -7,20 +7,32 @@ public abstract class BaseDatabaseConfiguration implements IDatabaseConfiguratio
 	
 	@Override
 	public String getConnectionString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        return this.connectionString;
+    }
+
+    @Override
+    public void setConnectionString(final String connection) {
+        this.connectionString = connection;
+    }
 
 	@Override
 	public DatabaseVendor getDatabaseVendor() {
-		// TODO Auto-generated method stub
-		return null;
+        return this.vendor;
 	}
+
+    @Override
+    public void setDatabaseVendor(final DatabaseVendor vendor) {
+        this.vendor = vendor;
+    }
 
 	@Override
 	public String getDriverClassName() {
-		// TODO Auto-generated method stub
-		return null;
+        return this.driverClassName;
 	}
+
+    @Override
+    public void setDriverClassName(final String driverClassName) {
+        this.driverClassName = driverClassName;
+    }
 
 }
