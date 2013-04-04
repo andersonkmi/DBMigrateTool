@@ -1,6 +1,6 @@
 package org.sharpsw.dbmt.config;
 
-public class PostgreSQLConfigurationImpl implements IDatabaseConfiguration {
+public class PostgreSQLConfiguration implements IDatabaseConfiguration {
 	private String server;
 	private Integer port;
 	private String userName;
@@ -8,7 +8,7 @@ public class PostgreSQLConfigurationImpl implements IDatabaseConfiguration {
 	private String database;
 	private String driverClassName;
 	
-	public PostgreSQLConfigurationImpl() {
+	public PostgreSQLConfiguration() {
 		this.server = "";
 		this.port = new Integer(5432);
 		this.userName = "";
@@ -17,7 +17,7 @@ public class PostgreSQLConfigurationImpl implements IDatabaseConfiguration {
 		this.driverClassName = "";
 	}
 	
-	public PostgreSQLConfigurationImpl(String server, Integer port, String userName, String password, String database, String driverClassName) {
+	public PostgreSQLConfiguration(String server, Integer port, String userName, String password, String database, String driverClassName) {
 		this.server = server;
 		this.port = port;
 		this.userName = userName;

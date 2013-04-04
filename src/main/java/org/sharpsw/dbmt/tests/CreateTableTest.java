@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.sharpsw.dbmt.base.Database;
 import org.sharpsw.dbmt.base.MetadataGenerator;
-import org.sharpsw.dbmt.config.MSAccessConfigurationImpl;
+import org.sharpsw.dbmt.config.MSAccessConfiguration;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreator;
 import org.sharpsw.dbmt.support.OracleDDLVisitor;
 import org.sharpsw.dbmt.support.TableVisitorProtocol;
@@ -16,7 +16,7 @@ public class CreateTableTest {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		MSAccessConfigurationImpl configuration = new MSAccessConfigurationImpl();
+		MSAccessConfiguration configuration = new MSAccessConfiguration();
 		configuration.setUser("admin");
 		configuration.setPassword("");
 		configuration.setDriverName("Driver do Microsoft Access (*.mdb)");

@@ -7,14 +7,14 @@ import java.util.List;
 import org.sharpsw.dbmt.base.Database;
 import org.sharpsw.dbmt.base.MetadataGenerator;
 import org.sharpsw.dbmt.base.Table;
-import org.sharpsw.dbmt.config.HyperSQLConfigurationImpl;
+import org.sharpsw.dbmt.config.HyperSQLConfiguration;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreator;
 
 public class PostgreSQLMetadataTest {
 
 	public static void main(String[] args) {
 		try {
-			HyperSQLConfigurationImpl configuration = new HyperSQLConfigurationImpl();
+			HyperSQLConfiguration configuration = new HyperSQLConfiguration();
 			configuration.setUser("sa");
 			configuration.setPassword("anderson");
 			configuration.setDatabase("sandbox");

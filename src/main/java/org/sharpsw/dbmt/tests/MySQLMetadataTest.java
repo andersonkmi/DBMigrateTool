@@ -7,7 +7,7 @@ import java.util.List;
 import org.sharpsw.dbmt.base.Database;
 import org.sharpsw.dbmt.base.MetadataGenerator;
 import org.sharpsw.dbmt.base.Table;
-import org.sharpsw.dbmt.config.MySQLConfigurationImpl;
+import org.sharpsw.dbmt.config.MySQLConfiguration;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreator;
 
 public class MySQLMetadataTest {
@@ -17,7 +17,7 @@ public class MySQLMetadataTest {
 	 */
 	public static void main(String[] args) {
 		try {
-			MySQLConfigurationImpl configuration = new MySQLConfigurationImpl();
+			MySQLConfiguration configuration = new MySQLConfiguration();
 			configuration.setUser("sandbox");
 			configuration.setPassword("sandbox");
 			configuration.setDatabase("sandbox");

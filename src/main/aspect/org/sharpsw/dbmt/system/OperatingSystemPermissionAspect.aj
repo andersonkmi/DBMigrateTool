@@ -1,5 +1,4 @@
 package org.sharpsw.dbmt.system;
-import org.sharpsw.dbmt.config.MSAccessConfigurationImpl;
 
 public aspect OperatingSystemPermissionAspect {
 	private String name = System.getProperty("os.name");

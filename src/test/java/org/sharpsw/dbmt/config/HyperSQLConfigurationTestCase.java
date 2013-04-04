@@ -18,13 +18,13 @@ public class HyperSQLConfigurationTestCase {
 
 	@Test
 	public void testConfigurationOK() {
-		HyperSQLConfigurationImpl config = new HyperSQLConfigurationImpl("localhost", "teste", new Integer(9001), "sa", "password", "org.hsqldb.jdbcDriver");
+		HyperSQLConfiguration config = new HyperSQLConfiguration("localhost", "teste", new Integer(9001), "sa", "password", "org.hsqldb.jdbcDriver");
 		Assert.assertEquals("jdbc:hsqldb:hsql://localhost:9001/teste;username=sa;password=password", config.getConnectionString());
 	}
 	
 	@Test(expected = InvalidConfigurationException.class)
 	public void testNullServerNameFail() {
 		@SuppressWarnings("unused")
-		HyperSQLConfigurationImpl config = new HyperSQLConfigurationImpl(null, "teste", new Integer(9001), "sa", "password", "org.hsqldb.jdbcDriver");
+        HyperSQLConfiguration config = new HyperSQLConfiguration(null, "teste", new Integer(9001), "sa", "password", "org.hsqldb.jdbcDriver");
 	}
 }
