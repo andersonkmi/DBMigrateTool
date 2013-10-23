@@ -8,7 +8,6 @@ public aspect ToolTracingAspect pertypewithin(org.sharpsw.dbmt..*) {
 
     pointcut traced(): execution(* *.*(..)) &&
             !within(ToolTracingAspect) &&
-            !within(HyperSQLConfigurationTestCase) &&
             !within(BaseExceptionTraceAspect+);
 
     after() returning: staticinitialization(*) {
