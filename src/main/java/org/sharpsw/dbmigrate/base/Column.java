@@ -11,21 +11,7 @@ public class Column implements Cloneable {
 	private int position;
 	private boolean isPrimaryKey;
 	private boolean isForeignKey;
-	private String referencedTableName;
-	private String referencedColumnName;
-	private ForeignKeyUpdateRule fkUpdateRule;
-	private ForeignKeyDeleteRule fkDeleteRule;
-		
-	public Column() {
-		this.name = "";
-		this.isAutoIncrement = false;
-		this.isNullable = false;
-		this.dataType = 0;
-		this.defaultValue = "";
-		this.length = 0;
-		this.precision = 0;
-		this.position = 0;
-	}
+	private ForeignKey foreignKey;
 	
 	public Column(String name) {
 		this.name = name;
@@ -36,19 +22,10 @@ public class Column implements Cloneable {
 		this.length = 0;
 		this.precision = 0;
 		this.position = 0;
+		this.isPrimaryKey = false;
+		this.isForeignKey = false;
 	}
-	
-	public Column(final String name, boolean isAutoIncrement, boolean isNullable, int dataType, final String defaultValue, int length, int precision, int position) {
-		this.name = name;
-		this.isAutoIncrement = isAutoIncrement;
-		this.isNullable = isNullable;
-		this.dataType = dataType;
-		this.defaultValue = defaultValue;
-		this.length = length;
-		this.precision = precision;
-		this.position = position;
-	}
-	
+		
 	public Column(final Column column) {
 		this.name = column.name;
 		this.isAutoIncrement = column.isAutoIncrement;
