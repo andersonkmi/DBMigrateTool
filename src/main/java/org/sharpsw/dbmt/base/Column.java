@@ -11,6 +11,9 @@ public class Column implements Cloneable {
 	private int position;
 	private boolean isPrimaryKey;
 	private boolean isForeignKey;
+	private String referencedTableName;
+	private String referencedColumnName;
+	private ForeignKeyUpdateRule fkUpdateRule;
 		
 	public Column() {
 		this.name = "";

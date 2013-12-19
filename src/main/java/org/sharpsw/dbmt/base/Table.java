@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Table {
+public class Table implements Comparable<Table> {
 	private String name;
 	private List<Column> columns;
 	private List<PrimaryKey> primaryKeys;
@@ -98,5 +98,10 @@ public class Table {
 		
 		Table instance = (Table) other;
 		return this.name.equals(instance.name);
+	}
+
+	@Override
+	public int compareTo(Table other) {
+		return this.getName().compareTo(other.getName());
 	}
 }
