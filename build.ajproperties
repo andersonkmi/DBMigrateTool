@@ -1,4 +1,0 @@
-src.includes = src/test/java/,\
-               src/main/aspect/,\
-               src/main/java/
-
