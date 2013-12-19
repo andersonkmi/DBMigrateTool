@@ -9,6 +9,8 @@ public class Column implements Cloneable {
 	private int length;
 	private int precision;
 	private int position;
+	private boolean isPrimaryKey;
+	private boolean isForeignKey;
 		
 	public Column() {
 		this.name = "";

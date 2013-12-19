@@ -1,6 +1,6 @@
 package org.sharpsw.dbmt.config;
 
-public class OracleConfiguration implements IDatabaseConfiguration {
+public class OracleConfiguration implements DatabaseConfig {
 
     public OracleConfiguration() {
         this.server = "";

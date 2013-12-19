@@ -6,13 +6,13 @@ import java.sql.SQLException;
 import org.sharpsw.dbmt.base.Database;
 import org.sharpsw.dbmt.base.MetadataGenException;
 import org.sharpsw.dbmt.base.MetadataGenerator;
-import org.sharpsw.dbmt.config.IDatabaseConfiguration;
+import org.sharpsw.dbmt.config.DatabaseConfig;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreateException;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreator;
 import org.sharpsw.dbmt.connectivity.DBConnectionDriverLoadException;
 
 class MigrationSourceService {
-	private IDatabaseConfiguration configuration;
+	private DatabaseConfig configuration;
 	private Connection connection;
 	
 	@SuppressWarnings("unused")
@@ -20,7 +20,7 @@ class MigrationSourceService {
 		
 	}
 	
-	MigrationSourceService(IDatabaseConfiguration configuration) {
+	MigrationSourceService(DatabaseConfig configuration) {
 		this.configuration = configuration;
 	}
 	

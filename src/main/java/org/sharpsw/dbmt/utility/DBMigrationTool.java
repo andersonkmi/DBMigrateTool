@@ -1,7 +1,7 @@
 package org.sharpsw.dbmt.utility;
 
 import org.sharpsw.dbmt.base.Database;
-import org.sharpsw.dbmt.config.IDatabaseConfiguration;
+import org.sharpsw.dbmt.config.DatabaseConfig;
 
 public class DBMigrationTool {
 	private MigrationSourceService sourceService;
@@ -12,7 +12,7 @@ public class DBMigrationTool {
 		// No action performed
 	}
 	
-	public DBMigrationTool(IDatabaseConfiguration sourceConfig, IDatabaseConfiguration destinationConfig) {
+	public DBMigrationTool(DatabaseConfig sourceConfig, DatabaseConfig destinationConfig) {
 		this.sourceService = new MigrationSourceService(sourceConfig);
 		this.destinationService = MigrationDestinationServiceFactory.getService(destinationConfig);		
 	}

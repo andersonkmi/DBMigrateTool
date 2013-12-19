@@ -1,15 +1,15 @@
 package org.sharpsw.dbmt.connectivity;
 
-import org.sharpsw.dbmt.config.IDatabaseConfiguration;
+import org.sharpsw.dbmt.config.DatabaseConfig;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnectionCreator {
-    private IDatabaseConfiguration configuration;
+    private DatabaseConfig configuration;
 
-    public DBConnectionCreator(IDatabaseConfiguration configuration) throws DBConnectionDriverLoadException {
+    public DBConnectionCreator(DatabaseConfig configuration) throws DBConnectionDriverLoadException {
         this.configuration = configuration;
         String driverClass = this.configuration.getDriverClassName();
 

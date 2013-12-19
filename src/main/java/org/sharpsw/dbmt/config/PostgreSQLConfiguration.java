@@ -1,6 +1,6 @@
 package org.sharpsw.dbmt.config;
 
-public class PostgreSQLConfiguration implements IDatabaseConfiguration {
+public class PostgreSQLConfiguration implements DatabaseConfig {
 	private String server;
 	private Integer port;
 	private String userName;

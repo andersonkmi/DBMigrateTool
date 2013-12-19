@@ -2,7 +2,7 @@ package org.sharpsw.dbmt.config;
 
 import static org.sharpsw.dbmt.config.DatabaseVendor.H2;
 
-public class H2Configuration implements IDatabaseConfiguration {
+public class H2Configuration implements DatabaseConfig {
     private String server;
     private Integer port;
     private String userName;

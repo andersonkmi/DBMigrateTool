@@ -6,13 +6,13 @@ import java.sql.Statement;
 import java.util.List;
 
 import org.sharpsw.dbmt.base.Database;
-import org.sharpsw.dbmt.config.IDatabaseConfiguration;
+import org.sharpsw.dbmt.config.DatabaseConfig;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreateException;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreator;
 import org.sharpsw.dbmt.connectivity.DBConnectionDriverLoadException;
 
 abstract class MigrationDestinationBaseService {
-	protected IDatabaseConfiguration configuration;
+	protected DatabaseConfig configuration;
 	protected List<String> tableCreateStatements;
 	protected List<String> fkStatements;
 	protected List<String> pkStatements;
@@ -25,7 +25,7 @@ abstract class MigrationDestinationBaseService {
 		
 	}
 	
-	MigrationDestinationBaseService(IDatabaseConfiguration configuration) {
+	MigrationDestinationBaseService(DatabaseConfig configuration) {
 		this.configuration = configuration;
 	}
 	

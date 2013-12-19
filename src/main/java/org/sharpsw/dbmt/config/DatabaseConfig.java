@@ -1,6 +1,6 @@
 package org.sharpsw.dbmt.config;
 
-public interface IDatabaseConfiguration {
+public interface DatabaseConfig {
 	public String getConnectionString();
 
 	public DatabaseVendor getDatabaseVendor();

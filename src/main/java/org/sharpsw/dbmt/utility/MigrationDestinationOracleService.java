@@ -1,7 +1,7 @@
 package org.sharpsw.dbmt.utility;
 
 import org.sharpsw.dbmt.base.Database;
-import org.sharpsw.dbmt.config.IDatabaseConfiguration;
+import org.sharpsw.dbmt.config.DatabaseConfig;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +12,7 @@ import java.util.List;
 class MigrationDestinationOracleService extends MigrationDestinationBaseService {
     private List<String> tablesToDrop;
 
-    MigrationDestinationOracleService(IDatabaseConfiguration configuration) {
+    MigrationDestinationOracleService(DatabaseConfig configuration) {
         super(configuration);
         this.tablesToDrop = new ArrayList<String>();
     }

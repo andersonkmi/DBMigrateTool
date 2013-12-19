@@ -1,6 +1,6 @@
 package org.sharpsw.dbmt.config;
 
-public class HyperSQLConfiguration implements IDatabaseConfiguration {
+public class HyperSQLConfiguration implements DatabaseConfig {
 	private String server;
 	private String database;
 	private String user;

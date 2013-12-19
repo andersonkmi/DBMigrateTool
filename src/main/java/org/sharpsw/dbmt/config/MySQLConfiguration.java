@@ -1,6 +1,6 @@
 package org.sharpsw.dbmt.config;
 
-public class MySQLConfiguration implements IDatabaseConfiguration {
+public class MySQLConfiguration implements DatabaseConfig {
 
 	private String server;
 	private Integer port;

@@ -5,16 +5,16 @@ import java.sql.Connection;
 import org.sharpsw.dbmt.base.Database;
 import org.sharpsw.dbmt.base.MetadataGenException;
 import org.sharpsw.dbmt.base.MetadataGenerator;
-import org.sharpsw.dbmt.config.IDatabaseConfiguration;
+import org.sharpsw.dbmt.config.DatabaseConfig;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreateException;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreator;
 import org.sharpsw.dbmt.connectivity.DBConnectionDriverLoadException;
 
 public class DatabaseExportToolSingleXmlFile {
-	private IDatabaseConfiguration configuration;
+	private DatabaseConfig configuration;
 	private String exportFile;
 	
-	public DatabaseExportToolSingleXmlFile(IDatabaseConfiguration configuration, String exportFile) {
+	public DatabaseExportToolSingleXmlFile(DatabaseConfig configuration, String exportFile) {
 		this.configuration = configuration;
 		this.exportFile = exportFile;
 	}

@@ -1,6 +1,6 @@
 package org.sharpsw.dbmt.config;
 
-public class MSSQLServerConfiguration implements IDatabaseConfiguration {
+public class MSSQLServerConfiguration implements DatabaseConfig {
     public MSSQLServerConfiguration() {
         this.server = "";
         this.instance = "";
