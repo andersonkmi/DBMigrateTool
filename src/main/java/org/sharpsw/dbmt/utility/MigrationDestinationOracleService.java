@@ -1,6 +1,6 @@
 package org.sharpsw.dbmt.utility;
 
-import org.sharpsw.dbmt.base.Database;
+import org.sharpsw.dbmigrate.base.Database;
 import org.sharpsw.dbmt.config.DatabaseConfig;
 
 import java.sql.ResultSet;

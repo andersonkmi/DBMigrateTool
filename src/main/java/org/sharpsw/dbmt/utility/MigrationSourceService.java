@@ -3,9 +3,9 @@ package org.sharpsw.dbmt.utility;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.sharpsw.dbmt.base.Database;
-import org.sharpsw.dbmt.base.MetadataGenException;
-import org.sharpsw.dbmt.base.MetadataGenerator;
+import org.sharpsw.dbmigrate.base.Database;
+import org.sharpsw.dbmigrate.base.MetadataGenException;
+import org.sharpsw.dbmigrate.base.MetadataGenerator;
 import org.sharpsw.dbmt.config.DatabaseConfig;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreateException;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreator;

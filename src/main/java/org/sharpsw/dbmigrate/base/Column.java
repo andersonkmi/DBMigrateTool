@@ -1,4 +1,4 @@
-package org.sharpsw.dbmt.base;
+package org.sharpsw.dbmigrate.base;
 
 public class Column implements Cloneable {
 	private String name;
@@ -14,6 +14,7 @@ public class Column implements Cloneable {
 	private String referencedTableName;
 	private String referencedColumnName;
 	private ForeignKeyUpdateRule fkUpdateRule;
+	private ForeignKeyDeleteRule fkDeleteRule;
 		
 	public Column() {
 		this.name = "";

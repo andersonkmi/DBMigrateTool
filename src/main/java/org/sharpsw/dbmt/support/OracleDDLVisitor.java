@@ -1,6 +1,6 @@
 package org.sharpsw.dbmt.support;
 
-import org.sharpsw.dbmt.base.*;
+import org.sharpsw.dbmigrate.base.*;
 
 import java.sql.Types;
 import java.util.*;

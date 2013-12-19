@@ -2,7 +2,7 @@ package org.sharpsw.dbmt.support;
 
 import java.util.List;
 
-import org.sharpsw.dbmt.base.Database;
+import org.sharpsw.dbmigrate.base.Database;
 
 public interface IDMLGenerator {
 	public void parse(final Database database);

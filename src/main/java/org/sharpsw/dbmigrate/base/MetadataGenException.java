@@ -1,4 +1,4 @@
-package org.sharpsw.dbmt.base;
+package org.sharpsw.dbmigrate.base;
 
 public class MetadataGenException extends Exception {
 	private static final long serialVersionUID = 6260465980979027109L;

@@ -1,6 +1,6 @@
-package org.sharpsw.dbmt.base;
+package org.sharpsw.dbmigrate.base;
 
-public enum ForeignKeyUpdateRule {
+public enum ForeignKeyDeleteRule {
 	IMPORTED_KEY_NO_ACTION(0, "No action"),
 	IMPORTED_KEY_CASCADE(1, "Cascade"),
 	IMPORTED_KEY_SET_NULL(2, "Set null"),
@@ -10,7 +10,7 @@ public enum ForeignKeyUpdateRule {
 	private Integer code;
 	private String description;
 	
-	private ForeignKeyUpdateRule(final Integer code, final String description) {
+	private ForeignKeyDeleteRule(final Integer code, final String description) {
 		this.code = code;
 		this.description = description;
 	}

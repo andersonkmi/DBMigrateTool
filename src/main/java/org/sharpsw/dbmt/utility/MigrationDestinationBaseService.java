@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import org.sharpsw.dbmt.base.Database;
+import org.sharpsw.dbmigrate.base.Database;
 import org.sharpsw.dbmt.config.DatabaseConfig;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreateException;
 import org.sharpsw.dbmt.connectivity.DBConnectionCreator;

@@ -1,5 +1,9 @@
 package org.sharpsw.dbmt.base;
 import org.apache.log4j.Logger;
+import org.sharpsw.dbmigrate.base.Column;
+import org.sharpsw.dbmigrate.base.ForeignKey;
+import org.sharpsw.dbmigrate.base.PrimaryKey;
+import org.sharpsw.dbmigrate.base.Table;
 
 public aspect TableLoggingAspect {
 	private static final Logger logger = Logger.getLogger(Table.class);

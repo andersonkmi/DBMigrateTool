@@ -1,4 +1,4 @@
-package org.sharpsw.dbmt.base;
+package org.sharpsw.dbmigrate.base;
 
 public class ForeignKey {
 	private String name;
