@@ -7,7 +7,6 @@ public enum DatabaseVendor {
     POSTGRESQL("PostgreSQL 9"),
     HYPERSQL("Hypersonic Database"),
     MYSQL("MySQL Server"),
-    H2("H2 database server"),
     XML("Flat XML");
 
     private String description;
