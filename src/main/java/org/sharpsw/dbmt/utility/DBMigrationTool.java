@@ -1,7 +1,7 @@
 package org.sharpsw.dbmt.utility;
 
 import org.sharpsw.dbmigrate.base.Database;
-import org.sharpsw.dbmt.config.DatabaseConfig;
+import org.sharpsw.dbmigrate.config.DatabaseConfig;
 
 public class DBMigrationTool {
 	private MigrationSourceService sourceService;

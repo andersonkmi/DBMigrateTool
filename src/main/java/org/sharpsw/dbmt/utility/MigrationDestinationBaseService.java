@@ -6,10 +6,10 @@ import java.sql.Statement;
 import java.util.List;
 
 import org.sharpsw.dbmigrate.base.Database;
-import org.sharpsw.dbmt.config.DatabaseConfig;
-import org.sharpsw.dbmt.connectivity.DBConnectionCreateException;
-import org.sharpsw.dbmt.connectivity.DBConnectionCreator;
-import org.sharpsw.dbmt.connectivity.DBConnectionDriverLoadException;
+import org.sharpsw.dbmigrate.config.DatabaseConfig;
+import org.sharpsw.dbmigrate.connectivity.DBConnectionCreateException;
+import org.sharpsw.dbmigrate.connectivity.DBConnectionCreator;
+import org.sharpsw.dbmigrate.connectivity.DBConnectionDriverLoadException;
 
 abstract class MigrationDestinationBaseService {
 	protected DatabaseConfig configuration;

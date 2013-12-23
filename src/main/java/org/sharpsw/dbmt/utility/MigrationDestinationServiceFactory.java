@@ -1,7 +1,7 @@
 package org.sharpsw.dbmt.utility;
 
-import org.sharpsw.dbmt.config.DatabaseVendor;
-import org.sharpsw.dbmt.config.DatabaseConfig;
+import org.sharpsw.dbmigrate.config.DatabaseConfig;
+import org.sharpsw.dbmigrate.config.DatabaseVendor;
 
 public class MigrationDestinationServiceFactory {
     public static MigrationDestinationBaseService getService(DatabaseConfig config) {

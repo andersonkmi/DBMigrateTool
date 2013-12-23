@@ -233,7 +233,6 @@ public class MetadataGenerator {
 					fk.setPrimaryKeyTableName(referencedTable);
 					//fk.setDeleteRule(DatabaseMetaData.importedKeyCascade);
 					//fk.setUpdateRule(DatabaseMetaData.importedKeyCascade);					
-					table.add(fk);
 				}
 				result.close();
 			} catch (SQLException exception) {
@@ -265,7 +264,6 @@ public class MetadataGenerator {
 				fk.setForeignKeyColumnName(fkColumnName);
 				//fk.setDeleteRule(deleteRule);
 				//fk.setUpdateRule(updateRule);			
-				table.add(fk);
 			}
 			rs.close();
 		}

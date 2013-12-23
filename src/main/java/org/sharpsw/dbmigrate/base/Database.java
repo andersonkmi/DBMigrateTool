@@ -84,56 +84,7 @@ public class Database {
     }
 
     public List<Table> getTables() {
-        organizeTables();
         return this.tables;
     }
 
-    private void organizeTables() {
-        List<Table> organizedTables = new ArrayList<Table>();
-        Iterator<Table> iterator = this.tables.iterator();
-        while (iterator.hasNext()) {
-            Table table = iterator.next();
-            if (!table.hasForeignKeys()) {
-                organizedTables.add(table);
-            }
-        }
-
-        iterator = organizedTables.iterator();
-        while (iterator.hasNext()) {
-            Table table = iterator.next();
-            this.tables.remove(table);
-        }
-
-        while (!this.tables.isEmpty()) {
-            Iterator<Table> iter = this.tables.iterator();
-            boolean isRemoved = false;
-            while (iter.hasNext() && !isRemoved) {
-                Table element = iter.next();
-                Map<String, List<ForeignKey>> keys = element.getForeignKeys();
-                Set<String> keySet = keys.keySet();
-                Iterator<String> keyIter = keySet.iterator();
-                boolean isAllKeysOk = true;
-                while (keyIter.hasNext() && isAllKeysOk) {
-                    String tableName = keyIter.next();
-                    Table fake = new Table();
-                    fake.setName(tableName);
-                    if (!organizedTables.contains(fake)) {
-                        isAllKeysOk = false;
-                    }
-                }
-
-                if (isAllKeysOk) {
-                    organizedTables.add(element);
-                    this.tables.remove(element);
-                    isRemoved = true;
-                }
-            }
-        }
-
-        Iterator<Table> tableIter = organizedTables.iterator();
-        while (tableIter.hasNext()) {
-            Table element = tableIter.next();
-            this.tables.add(element);
-        }
-    }
 }

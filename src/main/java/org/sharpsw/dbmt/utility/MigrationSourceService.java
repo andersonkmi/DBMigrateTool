@@ -6,10 +6,10 @@ import java.sql.SQLException;
 import org.sharpsw.dbmigrate.base.Database;
 import org.sharpsw.dbmigrate.base.MetadataGenException;
 import org.sharpsw.dbmigrate.base.MetadataGenerator;
-import org.sharpsw.dbmt.config.DatabaseConfig;
-import org.sharpsw.dbmt.connectivity.DBConnectionCreateException;
-import org.sharpsw.dbmt.connectivity.DBConnectionCreator;
-import org.sharpsw.dbmt.connectivity.DBConnectionDriverLoadException;
+import org.sharpsw.dbmigrate.config.DatabaseConfig;
+import org.sharpsw.dbmigrate.connectivity.DBConnectionCreateException;
+import org.sharpsw.dbmigrate.connectivity.DBConnectionCreator;
+import org.sharpsw.dbmigrate.connectivity.DBConnectionDriverLoadException;
 
 class MigrationSourceService {
 	private DatabaseConfig configuration;
