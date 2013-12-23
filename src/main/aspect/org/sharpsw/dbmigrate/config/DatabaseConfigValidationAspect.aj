@@ -1,9 +1,9 @@
 package org.sharpsw.dbmigrate.config;
 
 public aspect DatabaseConfigValidationAspect {
-	pointcut hsqldbConfigInit(String server, String database, Integer port, String user, String password, String driver) : initialization(public org.sharpsw.dbmigrate.config.HyperSQLConfiguration.new(String, String, Integer, String, String, String)) &&
+	pointcut h2ConfigInit(String server, String database, Integer port, String user, String password, String driver) : initialization(public org.sharpsw.dbmigrate.config.H2Configuration.new(String, String, Integer, String, String, String)) &&
 	                                                                                                                       args(server, database, port, user, password, driver);
-	before(String server, String database, Integer port, String user, String password, String driver) throws InvalidConfigurationException : hsqldbConfigInit(server, database, port, user, password, driver) {
+	before(String server, String database, Integer port, String user, String password, String driver) throws InvalidConfigurationException : h2ConfigInit(server, database, port, user, password, driver) {
 		validateServerName(server);
 		validateDatabase(database);
 		validatePort(port);
@@ -54,32 +54,32 @@ public aspect DatabaseConfigValidationAspect {
 		validateMSAccessJdbcDriverClass(driverClassName);
 	}
 	
-	pointcut setServer(String server) : (execution(public void org.sharpsw.dbmt.config.HyperSQLConfiguration.setServer(String)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setServer(String)) || execution(public void org.sharpsw.dbmt.config.OracleConfiguration.setServer(String)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setServer(String))) && args(server);
+	pointcut setServer(String server) : (execution(public void org.sharpsw.dbmt.config.H2Configuration.setServer(String)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setServer(String)) || execution(public void org.sharpsw.dbmt.config.OracleConfiguration.setServer(String)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setServer(String))) && args(server);
 	before(String server) throws InvalidConfigurationException : setServer(server) {
 		validateServerName(server);
 	}
 	
-	pointcut setDatabase(String database) : (execution(public void org.sharpsw.dbmt.config.HyperSQLConfiguration.setDatabase(String)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setDatabase(String)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setDatabase(String))) && args(database);
+	pointcut setDatabase(String database) : (execution(public void org.sharpsw.dbmt.config.H2Configuration.setDatabase(String)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setDatabase(String)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setDatabase(String))) && args(database);
 	before(String database) throws InvalidConfigurationException : setDatabase(database) {
 		validateDatabase(database);
 	}
 	
-	pointcut setPort(Integer port) : (execution (public void org.sharpsw.dbmt.config.HyperSQLConfiguration.setPort(Integer)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setPort(Integer)) || execution(public void org.sharpsw.dbmt.config.OracleConfiguration.setPort(Integer)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setPort(Integer))) && args(port);
+	pointcut setPort(Integer port) : (execution (public void org.sharpsw.dbmt.config.H2Configuration.setPort(Integer)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setPort(Integer)) || execution(public void org.sharpsw.dbmt.config.OracleConfiguration.setPort(Integer)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setPort(Integer))) && args(port);
 	before(Integer port) throws InvalidConfigurationException : setPort(port) {
 		validatePort(port);
 	}
 	
-	pointcut setUser(String user) : (execution(public void org.sharpsw.dbmt.config.HyperSQLConfiguration.setUser(String)) || execution(public void org.sharpsw.dbmt.config.MSAccessConfiguration.setUser(String)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setUser(String)) || execution(public void org.sharpsw.dbmt.config.OracleConfiguration.setUser(String)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setUser(String))) && args(user);
+	pointcut setUser(String user) : (execution(public void org.sharpsw.dbmt.config.H2Configuration.setUser(String)) || execution(public void org.sharpsw.dbmt.config.MSAccessConfiguration.setUser(String)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setUser(String)) || execution(public void org.sharpsw.dbmt.config.OracleConfiguration.setUser(String)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setUser(String))) && args(user);
 	before(String user) throws InvalidConfigurationException : setUser(user) {
 		validateUser(user);
 	}
 	
-	pointcut setPassword(String password) : (execution(public void org.sharpsw.dbmt.config.HyperSQLConfiguration.setPassword(String)) || execution(public void org.sharpsw.dbmt.config.MSAccessConfiguration.setPassword(String)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setPassword(String)) || execution(public void org.sharpsw.dbmt.config.OracleConfiguration.setPassword(String)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setPassword(String))) && args(password);
+	pointcut setPassword(String password) : (execution(public void org.sharpsw.dbmt.config.H2Configuration.setPassword(String)) || execution(public void org.sharpsw.dbmt.config.MSAccessConfiguration.setPassword(String)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setPassword(String)) || execution(public void org.sharpsw.dbmt.config.OracleConfiguration.setPassword(String)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setPassword(String))) && args(password);
 	before(String password) throws InvalidConfigurationException : setPassword(password) {
 		validatePassword(password);
 	}	
 
-	pointcut setDriverClassName(String driver) : (execution(public void org.sharpsw.dbmt.config.HyperSQLConfiguration.setDriverClassName(String)) || execution(public void org.sharpsw.dbmt.config.MSAccessConfiguration.setDriverClassName(String)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setDriverClassName(String)) || execution(public void org.sharpsw.dbmt.config.OracleConfiguration.setDriverClassName(String)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setDriverClassName(String))) && args(driver);
+	pointcut setDriverClassName(String driver) : (execution(public void org.sharpsw.dbmt.config.H2Configuration.setDriverClassName(String)) || execution(public void org.sharpsw.dbmt.config.MSAccessConfiguration.setDriverClassName(String)) || execution(public void org.sharpsw.dbmt.config.MSSQLServerConfiguration.setDriverClassName(String)) || execution(public void org.sharpsw.dbmt.config.OracleConfiguration.setDriverClassName(String)) || execution(public void org.sharpsw.dbmt.config.PostgreSQLConfiguration.setDriverClassName(String))) && args(driver);
 	before(String driver) throws InvalidConfigurationException : setDriverClassName(driver) {
 		validateDriver(driver);
 	}	

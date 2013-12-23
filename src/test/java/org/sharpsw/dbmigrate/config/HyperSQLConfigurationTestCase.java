@@ -3,7 +3,7 @@ package org.sharpsw.dbmigrate.config;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.sharpsw.dbmigrate.config.HyperSQLConfiguration;
+import org.sharpsw.dbmigrate.config.H2Configuration;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +19,7 @@ public class HyperSQLConfigurationTestCase {
 
     @Test
     public void testConfigurationOK() {
-        HyperSQLConfiguration config = new HyperSQLConfiguration("localhost", "teste", new Integer(9001), "sa", "password", "org.hsqldb.jdbcDriver");
+        H2Configuration config = new H2Configuration("localhost", "teste", new Integer(9001), "sa", "password", "org.hsqldb.jdbcDriver");
         assertEquals("jdbc:hsqldb:hsql://localhost:9001/teste;username=sa;password=password", config.getConnectionString());
     }
 }

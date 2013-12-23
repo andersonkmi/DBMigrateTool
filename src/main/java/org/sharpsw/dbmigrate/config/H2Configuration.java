@@ -1,6 +1,6 @@
 package org.sharpsw.dbmigrate.config;
 
-public class HyperSQLConfiguration implements DatabaseConfig {
+public class H2Configuration implements DatabaseConfig {
 	private String server;
 	private String database;
 	private String user;
@@ -8,7 +8,7 @@ public class HyperSQLConfiguration implements DatabaseConfig {
 	private Integer port;
 	private String driverClassName;
 	
-	public HyperSQLConfiguration() {
+	public H2Configuration() {
 		this.server = "";
 		this.database = "";
 		this.user = "";
@@ -17,7 +17,7 @@ public class HyperSQLConfiguration implements DatabaseConfig {
 		this.driverClassName = "";
 	}
 	
-	public HyperSQLConfiguration(String server, String database, Integer port, String user, String password, String driverClassName) {
+	public H2Configuration(String server, String database, Integer port, String user, String password, String driverClassName) {
 		this.server = server;
 		this.database = database;
 		this.port = port;
@@ -53,13 +53,13 @@ public class HyperSQLConfiguration implements DatabaseConfig {
 	@Override
 	public String getConnectionString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("jdbc:hsqldb:hsql://").append(this.server).append(":").append(this.port.toString()).append("/").append(this.database).append(";username=").append(this.user).append(";password=").append(this.password);
+		buffer.append("jdbc:h2:tcp://").append(this.server).append(":").append(this.port.toString()).append("/").append(this.database).append(";username=").append(this.user).append(";password=").append(this.password);
 		return buffer.toString();
 	}
 
 	@Override
 	public DatabaseVendor getDatabaseVendor() {
-		return DatabaseVendor.HYPERSQL;
+		return DatabaseVendor.H2;
 	}
 
 	@Override

@@ -5,7 +5,7 @@ public enum DatabaseVendor {
     ORACLE_12G("Oracle 12C"),
     MSSQLSERVER_2012("Microsoft SQL Server 2012"),
     POSTGRESQL("PostgreSQL 9"),
-    HYPERSQL("Hypersonic Database"),
+    H2("H2 Database"),
     MYSQL("MySQL Server"),
     XML("Flat XML");
 
