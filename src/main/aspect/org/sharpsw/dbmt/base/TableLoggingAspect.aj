@@ -2,7 +2,6 @@ package org.sharpsw.dbmt.base;
 import org.apache.log4j.Logger;
 import org.sharpsw.dbmigrate.base.Column;
 import org.sharpsw.dbmigrate.base.ForeignKey;
-import org.sharpsw.dbmigrate.base.PrimaryKey;
 import org.sharpsw.dbmigrate.base.Table;
 
 public aspect TableLoggingAspect {
@@ -27,14 +26,14 @@ public aspect TableLoggingAspect {
 		}
 	}
 	
-	pointcut addPrimaryKey(PrimaryKey key) : call(public void Table.add(PrimaryKey)) && args(key);
-	before(PrimaryKey key) : addPrimaryKey(key) {
-		if(logger.isDebugEnabled()) {
-			StringBuffer log = new StringBuffer();
-			log.append("Adding the primary key '").append(key.getColumn()).append("' into the table representation object");
-			logger.debug(log.toString());
-		}
-	}
+	//pointcut addPrimaryKey(PrimaryKey key) : call(public void Table.add(PrimaryKey)) && args(key);
+	//before(PrimaryKey key) : addPrimaryKey(key) {
+	//	if(logger.isDebugEnabled()) {
+	//		StringBuffer log = new StringBuffer();
+	//		log.append("Adding the primary key '").append(key.getColumn()).append("' into the table representation object");
+	//		logger.debug(log.toString());
+	//	}
+	//}
 	
 	pointcut addForeignKey(ForeignKey key) : call(public void Table.add(ForeignKey)) && args(key);
 	before(ForeignKey key) : addForeignKey(key) {

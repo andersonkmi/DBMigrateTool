@@ -27,14 +27,17 @@ public class Column implements Cloneable {
 	}
 		
 	public Column(final Column column) {
-		this.name = column.name;
-		this.isAutoIncrement = column.isAutoIncrement;
-		this.isNullable = column.isNullable;
-		this.dataType = column.dataType;
-		this.defaultValue = column.defaultValue;
-		this.length = column.length;
-		this.precision = column.precision;
-		this.position = column.position;
+		this.name = column.getName();
+		this.isAutoIncrement = column.isAutoIncrement();
+		this.isNullable = column.isNullable();
+		this.dataType = column.getDataType();
+		this.defaultValue = column.getDefaultValue();
+		this.length = column.getLength();
+		this.precision = column.getPrecision();
+		this.position = column.getPosition();	
+		this.isPrimaryKey = column.isPrimaryKey();
+		this.isForeignKey = column.isForeignKey();
+		this.foreignKey = column.getForeignKey();
 	}
 	
 	public String getName() {
@@ -99,6 +102,30 @@ public class Column implements Cloneable {
 	
 	public int getPosition() {
 		return this.position;
+	}
+	
+	public void setIsPrimaryKey(boolean flag) {
+		this.isPrimaryKey = flag;
+	}
+	
+	public boolean isPrimaryKey() {
+		return this.isPrimaryKey;
+	}
+	
+	public void setIsForeignKey(boolean flag) {
+		this.isForeignKey = flag;
+	}
+	
+	public boolean isForeignKey() {
+		return this.isForeignKey;
+	}
+	
+	public void setForeignKey(final ForeignKey fk) {
+		this.foreignKey = fk;
+	}
+	
+	public ForeignKey getForeignKey() {
+		return this.foreignKey;
 	}
 
 	@Override

@@ -194,8 +194,8 @@ public class MetadataGenerator {
 					    idx.contains(tableName)) {
 						columnName = rset.getString("COLUMN_NAME");
 						position = rset.getShort("ORDINAL_POSITION");						
-						PrimaryKey key = new PrimaryKey(position, columnName);
-						table.add(key);
+						//PrimaryKey key = new PrimaryKey(position, columnName);
+						//table.add(key);
 					}
 				}
 			}
@@ -205,8 +205,8 @@ public class MetadataGenerator {
 			while(pkResultSet.next()) {
 				String name = pkResultSet.getString("COLUMN_NAME");
 				short position = pkResultSet.getShort("KEY_SEQ");				
-				PrimaryKey key = new PrimaryKey(position, name);
-				table.add(key);
+				//PrimaryKey key = new PrimaryKey(position, name);
+				//table.add(key);
 			}
 			pkResultSet.close();
 		}
@@ -231,8 +231,8 @@ public class MetadataGenerator {
 					fk.setForeignKeyColumnName(columnName);
 					fk.setPrimaryKeyColumnName(referencedColumn);
 					fk.setPrimaryKeyTableName(referencedTable);
-					fk.setDeleteRule(DatabaseMetaData.importedKeyCascade);
-					fk.setUpdateRule(DatabaseMetaData.importedKeyCascade);					
+					//fk.setDeleteRule(DatabaseMetaData.importedKeyCascade);
+					//fk.setUpdateRule(DatabaseMetaData.importedKeyCascade);					
 					table.add(fk);
 				}
 				result.close();
@@ -263,8 +263,8 @@ public class MetadataGenerator {
 				fk.setPrimaryKeyTableName(pkTableName);
 				fk.setPrimaryKeyColumnName(pkColumnName);
 				fk.setForeignKeyColumnName(fkColumnName);
-				fk.setDeleteRule(deleteRule);
-				fk.setUpdateRule(updateRule);			
+				//fk.setDeleteRule(deleteRule);
+				//fk.setUpdateRule(updateRule);			
 				table.add(fk);
 			}
 			rs.close();

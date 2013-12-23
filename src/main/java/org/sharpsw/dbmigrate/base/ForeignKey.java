@@ -5,16 +5,16 @@ public class ForeignKey {
 	private String primaryKeyTableName;
 	private String primaryKeyColumnName;
 	private String foreignKeyColumnName;
-	private int updateRule;
-	private int deleteRule;
+	private ForeignKeyUpdateRule updateRule;
+	private ForeignKeyDeleteRule deleteRule;
 	
 	public ForeignKey() {
 		this.name = "";
 		this.primaryKeyColumnName = "";
 		this.primaryKeyTableName = "";
 		this.foreignKeyColumnName = "";
-		this.updateRule = 0;
-		this.deleteRule = 0;
+		this.updateRule = ForeignKeyUpdateRule.IMPORTED_KEY_NO_ACTION;
+		this.deleteRule = ForeignKeyDeleteRule.IMPORTED_KEY_NO_ACTION;
 	}
 	
 	public void setName(String name) {
@@ -33,11 +33,11 @@ public class ForeignKey {
 		this.foreignKeyColumnName = name;
 	}
 	
-	public void setDeleteRule(int rule) {
+	public void setDeleteRule(ForeignKeyDeleteRule rule) {
 		this.deleteRule = rule;
 	}
 	
-	public void setUpdateRule(int rule) {
+	public void setUpdateRule(ForeignKeyUpdateRule rule) {
 		this.updateRule = rule;
 	}
 	
@@ -57,11 +57,11 @@ public class ForeignKey {
 		return this.foreignKeyColumnName;
 	}
 	
-	public int getDeleteRule() {
+	public ForeignKeyDeleteRule getDeleteRule() {
 		return this.deleteRule;
 	}
 	
-	public int getUpdateRule() {
+	public ForeignKeyUpdateRule getUpdateRule() {
 		return this.updateRule;
 	}
 	

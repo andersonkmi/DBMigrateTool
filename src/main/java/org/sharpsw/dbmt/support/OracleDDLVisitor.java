@@ -154,24 +154,24 @@ public class OracleDDLVisitor {
     }
 
     private void generatePrimaryKeyStatements(Table table) {
-        List<PrimaryKey> keys = table.getPrimaryKeys();
-        Iterator<PrimaryKey> iterator = keys.iterator();
-        int size = keys.size();
-        int counter = 1;
+       // List<PrimaryKey> keys = table.getPrimaryKeys();
+        //Iterator<PrimaryKey> iterator = keys.iterator();
+        //int size = keys.size();
+        //int counter = 1;
 
-        StringBuffer pkCols = new StringBuffer();
-        while (iterator.hasNext()) {
-            pkCols.append(iterator.next().getColumn());
-            if (counter < size) {
-                pkCols.append(", ");
-            }
-            counter++;
-        }
+        //StringBuffer pkCols = new StringBuffer();
+        //while (iterator.hasNext()) {
+        //    pkCols.append(iterator.next().getColumn());
+        //    if (counter < size) {
+        //        pkCols.append(", ");
+        //    }
+        //    counter++;
+        //}
 
-        StringBuffer statement = new StringBuffer();
-        statement.append("ALTER TABLE ").append(table.getName()).append(" ADD CONSTRAINT ").append(table.getName()).append("_pk ");
-        statement.append("PRIMARY KEY (").append(pkCols).append(")");
-        this.primaryKeyStatements.add(statement.toString());
+        //StringBuffer statement = new StringBuffer();
+        //statement.append("ALTER TABLE ").append(table.getName()).append(" ADD CONSTRAINT ").append(table.getName()).append("_pk ");
+        //statement.append("PRIMARY KEY (").append(pkCols).append(")");
+        //this.primaryKeyStatements.add(statement.toString());
     }
 
     private void generateForeignKeyStatements(Table table) {
