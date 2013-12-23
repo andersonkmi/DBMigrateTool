@@ -1,9 +1,7 @@
 package org.sharpsw.dbmigrate.base;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Table implements Comparable<Table> {
 	private String name;
@@ -11,12 +9,12 @@ public class Table implements Comparable<Table> {
 	
 	public Table() {
 		this.name = "";
-		this.columns = new ArrayList<Column>();
+		this.columns = new LinkedList<Column>();
 	}
 	
 	public Table(String name) {
 		this.name = name;
-		this.columns = new ArrayList<Column>();
+		this.columns = new LinkedList<Column>();
 	}
 	
 	public void setName(String name) {

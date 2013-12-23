@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.sharpsw.dbmigrate.base.Database;
-import org.sharpsw.dbmigrate.base.MetadataGenException;
+import org.sharpsw.dbmigrate.base.MetadataGenerationException;
 import org.sharpsw.dbmigrate.base.MetadataGenerator;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.connectivity.DBConnectionCreateException;
@@ -40,7 +40,7 @@ class MigrationSourceService {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when creating the connection to database server: ").append(exception.getMessage());
 			throw new DBMigrationException(message.toString(), exception);			
-		} catch (MetadataGenException exception) {
+		} catch (MetadataGenerationException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when creating the database metadata: ").append(exception.getMessage());
 			throw new DBMigrationException(message.toString(), exception);						

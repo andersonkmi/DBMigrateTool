@@ -10,7 +10,6 @@ import java.sql.Statement;
 public class MetadataGenerator {
 	private Connection connection;
 	private DatabaseMetaData meta;
-	private boolean isMSAccess;
 	
 	@SuppressWarnings("unused")
 	private MetadataGenerator() {
@@ -21,7 +20,7 @@ public class MetadataGenerator {
 		this.connection = connection;
 	}
 	
-	public Database generate() throws MetadataGenException {
+	public Database generate() throws MetadataGenerationException {
 		try {
 			Database database = new Database("");
 			this.meta = this.connection.getMetaData();
@@ -43,13 +42,12 @@ public class MetadataGenerator {
 			database.setProductName(databaseProductName);
 			database.setProductVersion(databaseProductVersion);
 			
-			checkDatabaseProduct(database);
 			generateTableList(database);
 			return database;
 		} catch (SQLException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("SQL exception raised when generating database metada.");
-			throw new MetadataGenException(message.toString(), exception);
+			throw new MetadataGenerationException(message.toString(), exception);
 		} finally {
 			if(this.connection != null) {
 				try {
@@ -57,7 +55,7 @@ public class MetadataGenerator {
 				} catch (SQLException exception) {
 					StringBuffer message = new StringBuffer();
 					message.append("Error when closing the database connection.");
-					throw new MetadataGenException(message.toString(), exception);
+					throw new MetadataGenerationException(message.toString(), exception);
 				}
 			}
 		}
@@ -66,14 +64,8 @@ public class MetadataGenerator {
 	protected DatabaseMetaData getMetadata() {
 		return this.meta;
 	}
-		
-	private void checkDatabaseProduct(Database database) {
-		if(database.getProductName().equalsIgnoreCase("Access")) {
-			this.isMSAccess = true;
-		}
-	}
 	
-	private void generateTableList(Database database) throws MetadataGenException {
+	private void generateTableList(Database database) throws MetadataGenerationException {
 		String types[] = { "TABLE" };
 		ResultSet rs = null;
 		try {
@@ -88,13 +80,13 @@ public class MetadataGenerator {
 				} else {
 					StringBuffer message = new StringBuffer();
 					message.append("The table '").append(name).append("' is not valid.");
-					throw new MetadataGenException(message.toString());
+					throw new MetadataGenerationException(message.toString());
 				}
 			}
 		} catch (SQLException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when listing the tables.");
-			throw new MetadataGenException(message.toString(), exception);
+			throw new MetadataGenerationException(message.toString(), exception);
 		} finally {
 			try {
 				if(rs != null) {
@@ -103,12 +95,12 @@ public class MetadataGenerator {
 			} catch (SQLException exception) {
 				StringBuffer message = new StringBuffer();
 				message.append("Error when trying to close the table result set.");
-				throw new MetadataGenException(message.toString(), exception);
+				throw new MetadataGenerationException(message.toString(), exception);
 			}
 		}
 	}
 	
-	private void generateColumnList(Table table) throws MetadataGenException {
+	private void generateColumnList(Table table) throws MetadataGenerationException {
 		ResultSet rs = null;
 		try {			
 			this.getPrimaryKeys(table);
@@ -166,7 +158,7 @@ public class MetadataGenerator {
 		} catch (SQLException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when listing the columns for table: '").append(table).append("'");
-			throw new MetadataGenException(message.toString(), exception);
+			throw new MetadataGenerationException(message.toString(), exception);
 		} finally {
 			if(rs != null) {
 				try {
@@ -174,112 +166,58 @@ public class MetadataGenerator {
 				} catch (SQLException exception) {
 					StringBuffer message = new StringBuffer();
 					message.append("Error when trying to close the column result set.");
-					throw new MetadataGenException(message.toString(), exception);
+					throw new MetadataGenerationException(message.toString(), exception);
 				}
 			}
 		}
 	}
 	
 	private void getPrimaryKeys(Table table) throws SQLException {
-		if (this.isMSAccess) {			
-			String columnName = "";
-			short position = -1;
-			String tableName = table.getName();
-			
-			ResultSet rset = this.meta.getIndexInfo(null, null, table.getName(), true, true);
-			while (rset.next()) {
-				String idx = rset.getString("INDEX_NAME");
-				if (idx != null) {
-					if (idx.equalsIgnoreCase("PrimaryKey") || 
-					    idx.contains(tableName)) {
-						columnName = rset.getString("COLUMN_NAME");
-						position = rset.getShort("ORDINAL_POSITION");						
-						//PrimaryKey key = new PrimaryKey(position, columnName);
-						//table.add(key);
-					}
-				}
-			}
-			rset.close();
-		} else {			
-			ResultSet pkResultSet = this.meta.getPrimaryKeys(null, null, table.getName());
-			while(pkResultSet.next()) {
-				String name = pkResultSet.getString("COLUMN_NAME");
-				short position = pkResultSet.getShort("KEY_SEQ");				
-				//PrimaryKey key = new PrimaryKey(position, name);
-				//table.add(key);
-			}
-			pkResultSet.close();
+		ResultSet pkResultSet = this.meta.getPrimaryKeys(null, null, table.getName());
+		while(pkResultSet.next()) {
+			String name = pkResultSet.getString("COLUMN_NAME");
+			short position = pkResultSet.getShort("KEY_SEQ");				
+			//PrimaryKey key = new PrimaryKey(position, name);
+			//table.add(key);
 		}
+		pkResultSet.close();		
 	}
 	
 	private void getForeignKeys(Table table) throws SQLException {
-		if(this.isMSAccess) {
-			Connection connection = this.meta.getConnection();
-			StringBuffer buffer = new StringBuffer();
-			buffer.append("SELECT szColumn, szReferencedObject, szReferencedColumn, szRelationship from MSysRelationships WHERE szObject = '").append(table.getName()).append("'");
-			try {
-				Statement statement = connection.createStatement();
-				ResultSet result = statement.executeQuery(buffer.toString());
-				while(result.next()) {
-					String columnName = result.getString("szColumn");
-					String referencedTable = result.getString("szReferencedObject");
-					String referencedColumn = result.getString("szReferencedColumn");
-					String fkName = result.getString("szRelationship");
-					
-					ForeignKey fk = new ForeignKey();
-					fk.setName(fkName);
-					fk.setForeignKeyColumnName(columnName);
-					fk.setPrimaryKeyColumnName(referencedColumn);
-					fk.setPrimaryKeyTableName(referencedTable);
-					//fk.setDeleteRule(DatabaseMetaData.importedKeyCascade);
-					//fk.setUpdateRule(DatabaseMetaData.importedKeyCascade);					
-				}
-				result.close();
-			} catch (SQLException exception) {
-				// TODO: handle this exception later
+		ResultSet rs = this.meta.getImportedKeys(null, null, table.getName());
+		int counter = 0;
+		while(rs.next()) {
+			String pkTableName = rs.getString("PKTABLE_NAME");
+			String pkColumnName = rs.getString("PKCOLUMN_NAME");
+			String fkColumnName = rs.getString("FKCOLUMN_NAME");
+			String fkName = rs.getString("FK_NAME");
+			short updateRule = rs.getShort("UPDATE_RULE");
+			short deleteRule = rs.getShort("DELETE_RULE");
+			
+			ForeignKey fk = new ForeignKey();
+			if(fkName != null && !fkName.isEmpty()) {
+				fk.setName(fkName);
+			} else {
+				StringBuffer buffer = new StringBuffer();
+				buffer.append("Fake_FK").append(counter);
+				fk.setName(buffer.toString());
+				counter++;
 			}
-		} else {
-			ResultSet rs = this.meta.getImportedKeys(null, null, table.getName());
-			int counter = 0;
-			while(rs.next()) {
-				String pkTableName = rs.getString("PKTABLE_NAME");
-				String pkColumnName = rs.getString("PKCOLUMN_NAME");
-				String fkColumnName = rs.getString("FKCOLUMN_NAME");
-				String fkName = rs.getString("FK_NAME");
-				short updateRule = rs.getShort("UPDATE_RULE");
-				short deleteRule = rs.getShort("DELETE_RULE");
-				
-				ForeignKey fk = new ForeignKey();
-				if(fkName != null && !fkName.isEmpty()) {
-					fk.setName(fkName);
-				} else {
-					StringBuffer buffer = new StringBuffer();
-					buffer.append("Fake_FK").append(counter);
-					fk.setName(buffer.toString());
-					counter++;
-				}
-				
-				fk.setPrimaryKeyTableName(pkTableName);
-				fk.setPrimaryKeyColumnName(pkColumnName);
-				fk.setForeignKeyColumnName(fkColumnName);
-				//fk.setDeleteRule(deleteRule);
-				//fk.setUpdateRule(updateRule);			
-			}
-			rs.close();
+			
+			fk.setPrimaryKeyTableName(pkTableName);
+			fk.setPrimaryKeyColumnName(pkColumnName);
+			fk.setForeignKeyColumnName(fkColumnName);
+			//fk.setDeleteRule(deleteRule);
+			//fk.setUpdateRule(updateRule);			
 		}
+		rs.close();
 	}
 	
 	boolean isTableNameValid(String name) {
 		boolean result = true;
-		if(this.isMSAccess) {
-			if(name.startsWith("MSys")) {
-				result = false;
-			}
-		}
 		if(name.contains(" ")) {
 			result = false;
-		}
-		
+		}		
 		return result;
 	}
 }

@@ -3,7 +3,7 @@ package org.sharpsw.dbmt.utility;
 import java.sql.Connection;
 
 import org.sharpsw.dbmigrate.base.Database;
-import org.sharpsw.dbmigrate.base.MetadataGenException;
+import org.sharpsw.dbmigrate.base.MetadataGenerationException;
 import org.sharpsw.dbmigrate.base.MetadataGenerator;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.connectivity.DBConnectionCreateException;
@@ -29,7 +29,7 @@ public class DatabaseExportToolSingleXmlFile {
 			throw new XMLExportException("JDBC driver exception", exception);
 		} catch (DBConnectionCreateException exception) {
 			throw new XMLExportException("Connection exception", exception);
-		} catch (MetadataGenException exception) {
+		} catch (MetadataGenerationException exception) {
 			throw new XMLExportException("Metadata error", exception);
 		}
 	}
