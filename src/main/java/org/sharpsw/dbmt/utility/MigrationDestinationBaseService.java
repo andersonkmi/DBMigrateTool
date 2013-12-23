@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.sharpsw.dbmigrate.base.Database;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
-import org.sharpsw.dbmigrate.connectivity.DBConnectionCreateException;
-import org.sharpsw.dbmigrate.connectivity.DBConnectionCreator;
-import org.sharpsw.dbmigrate.connectivity.DBConnectionDriverLoadException;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreateException;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreator;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
 abstract class MigrationDestinationBaseService {
 	protected DatabaseConfig configuration;
@@ -36,11 +36,11 @@ abstract class MigrationDestinationBaseService {
 			generateStatements(database);
 			createTables();
 			exceptionRaised = false;
-		} catch (DBConnectionCreateException exception) {
+		} catch (DatabaseConnectionCreateException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("Connection creation exception: ").append(exception.getMessage());
 			throw new DBMigrationException(message.toString(), exception);
-		} catch (DBConnectionDriverLoadException exception) {
+		} catch (DatabaseConnectionDriverLoadException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("DB driver loading exception: ").append(exception.getMessage());
 			throw new DBMigrationException(message.toString(), exception);
@@ -65,8 +65,8 @@ abstract class MigrationDestinationBaseService {
 		}		
 	}
 	
-	protected void connect() throws SQLException, DBConnectionDriverLoadException, DBConnectionCreateException {
-		DBConnectionCreator destination = new DBConnectionCreator(this.configuration);
+	protected void connect() throws SQLException, DatabaseConnectionDriverLoadException, DatabaseConnectionCreateException {
+		DatabaseConnectionCreator destination = new DatabaseConnectionCreator(this.configuration);
 		this.connection = destination.getConnection();
 		this.connection.setAutoCommit(false);
 	}

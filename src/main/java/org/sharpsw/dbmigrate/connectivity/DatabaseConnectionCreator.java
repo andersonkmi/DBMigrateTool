@@ -6,10 +6,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DBConnectionCreator {
+public class DatabaseConnectionCreator {
     private DatabaseConfig configuration;
 
-    public DBConnectionCreator(DatabaseConfig configuration) throws DBConnectionDriverLoadException {
+    public DatabaseConnectionCreator(DatabaseConfig configuration) throws DatabaseConnectionDriverLoadException {
         this.configuration = configuration;
         String driverClass = this.configuration.getDriverClassName();
 
@@ -18,20 +18,20 @@ public class DBConnectionCreator {
         } catch (ClassNotFoundException classNotFoundExc) {
             StringBuilder message = new StringBuilder();
             message.append("Error when loading the driver: '").append(driverClass).append("'");
-            throw new DBConnectionDriverLoadException(message.toString(), classNotFoundExc);
+            throw new DatabaseConnectionDriverLoadException(message.toString(), classNotFoundExc);
         } catch (ExceptionInInitializerError error) {
             StringBuilder message = new StringBuilder();
             message.append("Error when loading the driver: '").append(driverClass).append("'");
 
-            throw new DBConnectionDriverLoadException(message.toString(), error);
+            throw new DatabaseConnectionDriverLoadException(message.toString(), error);
         } catch (LinkageError linkageErr) {
             StringBuilder message = new StringBuilder();
             message.append("Error when loading the driver: '").append(driverClass).append("'");
-            throw new DBConnectionDriverLoadException(message.toString(), linkageErr);
+            throw new DatabaseConnectionDriverLoadException(message.toString(), linkageErr);
         }
     }
 
-    public Connection getConnection() throws DBConnectionCreateException {
+    public Connection getConnection() throws DatabaseConnectionCreateException {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(this.configuration.getConnectionString());
@@ -39,7 +39,7 @@ public class DBConnectionCreator {
         } catch (SQLException exception) {
             StringBuilder message = new StringBuilder();
             message.append("Error when creating a new connection to the database.");
-            throw new DBConnectionCreateException(message.toString(), exception);
+            throw new DatabaseConnectionCreateException(message.toString(), exception);
         }
     }
 }

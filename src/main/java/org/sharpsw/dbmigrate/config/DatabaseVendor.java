@@ -2,12 +2,12 @@ package org.sharpsw.dbmigrate.config;
 
 public enum DatabaseVendor {
     ORACLE_11G("Oracle 11G"),
+    ORACLE_12G("Oracle 12C"),
     MSSQLSERVER_2012("Microsoft SQL Server 2012"),
     POSTGRESQL("PostgreSQL 9"),
-    HYPERSQL("Hypersonic Database "),
+    HYPERSQL("Hypersonic Database"),
     MYSQL("MySQL Server"),
     H2("H2 database server"),
-
     XML("Flat XML");
 
     private String description;

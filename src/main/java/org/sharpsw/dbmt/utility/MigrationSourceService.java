@@ -7,9 +7,9 @@ import org.sharpsw.dbmigrate.base.Database;
 import org.sharpsw.dbmigrate.base.MetadataGenerationException;
 import org.sharpsw.dbmigrate.base.MetadataGenerator;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
-import org.sharpsw.dbmigrate.connectivity.DBConnectionCreateException;
-import org.sharpsw.dbmigrate.connectivity.DBConnectionCreator;
-import org.sharpsw.dbmigrate.connectivity.DBConnectionDriverLoadException;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreateException;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreator;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
 class MigrationSourceService {
 	private DatabaseConfig configuration;
@@ -27,16 +27,16 @@ class MigrationSourceService {
 	public Database getDatabase() throws DBMigrationException {
 		try {
 			Database database = null;
-			DBConnectionCreator connCreator = new DBConnectionCreator(this.configuration);
+			DatabaseConnectionCreator connCreator = new DatabaseConnectionCreator(this.configuration);
 			this.connection = connCreator.getConnection();
 			MetadataGenerator generator = new MetadataGenerator(this.connection);
 			database = generator.generate();
 			return database;
-		} catch (DBConnectionDriverLoadException exception) {
+		} catch (DatabaseConnectionDriverLoadException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when loading the database driver: ").append(exception.getMessage());
 			throw new DBMigrationException(message.toString(), exception);
-		} catch (DBConnectionCreateException exception) {
+		} catch (DatabaseConnectionCreateException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when creating the connection to database server: ").append(exception.getMessage());
 			throw new DBMigrationException(message.toString(), exception);			
