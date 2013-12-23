@@ -1,4 +1,4 @@
-package org.sharpsw.dbmt.utility;
+package org.sharpsw.dbmigrate.utility;
 
 public class DBMigrationException extends Exception {
 	private static final long serialVersionUID = 1L;

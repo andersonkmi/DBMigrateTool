@@ -1,4 +1,4 @@
-package org.sharpsw.dbmt.utility;
+package org.sharpsw.dbmigrate.utility;
 
 public class XMLExportException extends Exception {
 

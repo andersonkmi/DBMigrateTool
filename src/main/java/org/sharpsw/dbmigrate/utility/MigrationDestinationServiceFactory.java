@@ -1,4 +1,4 @@
-package org.sharpsw.dbmt.utility;
+package org.sharpsw.dbmigrate.utility;
 
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.config.DatabaseVendor;

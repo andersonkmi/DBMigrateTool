@@ -1,15 +1,15 @@
-package org.sharpsw.dbmt.utility;
+package org.sharpsw.dbmigrate.utility;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import org.sharpsw.dbmigrate.base.Database;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreateException;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreator;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
+import org.sharpsw.dbmigrate.data.Database;
 
 abstract class MigrationDestinationBaseService {
 	protected DatabaseConfig configuration;

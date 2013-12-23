@@ -1,6 +1,6 @@
 package org.sharpsw.dbmigrate.support;
 
-import org.sharpsw.dbmigrate.base.*;
+import org.sharpsw.dbmigrate.data.*;
 
 import java.sql.Types;
 import java.util.*;

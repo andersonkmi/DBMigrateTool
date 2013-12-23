@@ -1,9 +1,9 @@
 package org.sharpsw.dbmigrate.base;
 
 import org.apache.log4j.Logger;
-import org.sharpsw.dbmigrate.base.Database;
-import org.sharpsw.dbmigrate.base.MetadataGenerator;
-import org.sharpsw.dbmigrate.base.Table;
+import org.sharpsw.dbmigrate.data.Database;
+import org.sharpsw.dbmigrate.data.MetadataGenerator;
+import org.sharpsw.dbmigrate.data.Table;
 
 public aspect MetadataGeneratorLoggingAspect {
 	private static final Logger logger = Logger.getLogger(MetadataGenerator.class);

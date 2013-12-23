@@ -3,9 +3,9 @@ package org.sharpsw.dbmigrate.support;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sharpsw.dbmigrate.base.Column;
-import org.sharpsw.dbmigrate.base.Database;
-import org.sharpsw.dbmigrate.base.Table;
+import org.sharpsw.dbmigrate.data.Column;
+import org.sharpsw.dbmigrate.data.Database;
+import org.sharpsw.dbmigrate.data.Table;
 
 public class OracleDMLGeneratorImpl implements IDMLGenerator {
 	public static final int TABLE_NAME_MAX_SIZE = 30;

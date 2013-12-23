@@ -1,4 +1,4 @@
-package org.sharpsw.dbmigrate.base;
+package org.sharpsw.dbmigrate.data;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
