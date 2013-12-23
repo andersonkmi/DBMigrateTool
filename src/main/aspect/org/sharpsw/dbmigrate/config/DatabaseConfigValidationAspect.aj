@@ -1,7 +1,7 @@
 package org.sharpsw.dbmigrate.config;
 
 public aspect DatabaseConfigValidationAspect {
-	pointcut hsqldbConfigInit(String server, String database, Integer port, String user, String password, String driver) : initialization(public org.sharpsw.dbmt.config.HyperSQLConfiguration.new(String, String, Integer, String, String, String)) &&
+	pointcut hsqldbConfigInit(String server, String database, Integer port, String user, String password, String driver) : initialization(public org.sharpsw.dbmigrate.config.HyperSQLConfiguration.new(String, String, Integer, String, String, String)) &&
 	                                                                                                                       args(server, database, port, user, password, driver);
 	before(String server, String database, Integer port, String user, String password, String driver) throws InvalidConfigurationException : hsqldbConfigInit(server, database, port, user, password, driver) {
 		validateServerName(server);
@@ -13,7 +13,7 @@ public aspect DatabaseConfigValidationAspect {
 		validateHyperSQLJdbcDriverClass(driver);
 	}
 	
-	pointcut msSqlServerConfigInit(String driverClassName, String server, String instance, Integer port, String user, String password, String database) : initialization(public org.sharpsw.dbmt.config.MSSQLServerConfiguration.new(String, String, String, Integer, String, String, String)) && args(driverClassName, server, instance, port, user, password, database);
+	pointcut msSqlServerConfigInit(String driverClassName, String server, String instance, Integer port, String user, String password, String database) : initialization(public org.sharpsw.dbmigrate.config.MSSQLServerConfiguration.new(String, String, String, Integer, String, String, String)) && args(driverClassName, server, instance, port, user, password, database);
 	before(String driverClassName, String server, String instance, Integer port, String user, String password, String database) throws InvalidConfigurationException : msSqlServerConfigInit(driverClassName, server, instance, port, user, password, database) {
 		validateDriver(driverClassName);
 		validateServerName(server);
@@ -24,7 +24,7 @@ public aspect DatabaseConfigValidationAspect {
 		validateMSSQLServerJdbcDriverClass(driverClassName);
 	}
 	
-	pointcut oracleConfigInit(String driverClassName, String server, Integer port, String service, String user, String password) : initialization(public org.sharpsw.dbmt.config.OracleConfiguration.new(String, String, Integer, String, String, String)) && args(driverClassName, server, port, service, user, password);
+	pointcut oracleConfigInit(String driverClassName, String server, Integer port, String service, String user, String password) : initialization(public org.sharpsw.dbmigrate.config.OracleConfiguration.new(String, String, Integer, String, String, String)) && args(driverClassName, server, port, service, user, password);
 	before(String driverClassName, String server, Integer port, String service, String user, String password) throws InvalidConfigurationException : oracleConfigInit(driverClassName, server, port, service, user, password) {
 		validateDriver(driverClassName);
 		validateServerName(server);
