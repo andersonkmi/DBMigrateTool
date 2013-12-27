@@ -29,8 +29,8 @@ class MigrationSourceService {
 			Database database = null;
 			DatabaseConnectionCreator connCreator = new DatabaseConnectionCreator();
 			this.connection = connCreator.getConnection(this.configuration);
-			MetadataGenerator generator = new MetadataGenerator(this.connection);
-			database = generator.generate();
+			MetadataGenerator generator = new MetadataGenerator();
+			database = generator.generate(this.connection);
 			return database;
 		} catch (DatabaseConnectionDriverLoadException exception) {
 			StringBuffer message = new StringBuffer();

@@ -7,32 +7,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MetadataGenerator {
-	private Connection connection;
-	private DatabaseMetaData metadata;
 	
-	@SuppressWarnings("unused")
-	private MetadataGenerator() {
-		
-	}
-	
-	public MetadataGenerator(Connection connection) {
-		this.connection = connection;
-	}
-	
-	public Database generate() throws MetadataGenerationException {
+	public Database generate(final Connection connection) throws MetadataGenerationException {
 		try {
 			Database database = new Database("");
-			this.metadata = this.connection.getMetaData();
-			String databaseProductName = this.metadata.getDatabaseProductName();
-			String databaseProductVersion = this.metadata.getDatabaseProductVersion();
-			int majorJDBCVersion = this.metadata.getJDBCMajorVersion();
-			int minorJDBCVersion = this.metadata.getJDBCMinorVersion();
+			DatabaseMetaData metadata = connection.getMetaData();
+			String databaseProductName = metadata.getDatabaseProductName();
+			String databaseProductVersion = metadata.getDatabaseProductVersion();
+			int majorJDBCVersion = metadata.getJDBCMajorVersion();
+			int minorJDBCVersion = metadata.getJDBCMinorVersion();
 			
 			database.setMajorJDBCVersion(majorJDBCVersion);
 			database.setMinorJDBCVersion(minorJDBCVersion);
 			try {
-				int majorVersion = this.metadata.getDatabaseMajorVersion();
-				int minorVersion = this.metadata.getDatabaseMinorVersion();
+				int majorVersion = metadata.getDatabaseMajorVersion();
+				int minorVersion = metadata.getDatabaseMinorVersion();
 				database.setMajorVersion(majorVersion);
 				database.setMinorVersion(minorVersion);
 			} catch (UnsupportedOperationException opExc) {
@@ -41,16 +30,16 @@ public class MetadataGenerator {
 			database.setProductName(databaseProductName);
 			database.setProductVersion(databaseProductVersion);
 			
-			generateTableList(database);
+			generateTableList(database, metadata);
 			return database;
 		} catch (SQLException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("SQL exception raised when generating database metada.");
 			throw new MetadataGenerationException(message.toString(), exception);
 		} finally {
-			if(this.connection != null) {
+			if(connection != null) {
 				try {
-					this.connection.close();					
+					connection.close();					
 				} catch (SQLException exception) {
 					StringBuffer message = new StringBuffer();
 					message.append("Error when closing the database connection.");
@@ -60,21 +49,21 @@ public class MetadataGenerator {
 		}
 	}
 	
-	protected DatabaseMetaData getMetadata() {
-		return this.metadata;
+	public Database generate(final String xmlFile) {
+		return null;
 	}
 	
-	private void generateTableList(Database database) throws MetadataGenerationException {
+	private void generateTableList(final Database database, final DatabaseMetaData metadata) throws MetadataGenerationException {
 		String types[] = { "TABLE" };
 		ResultSet rs = null;
 		try {
-			rs = this.metadata.getTables(null, null, "%", types);
+			rs = metadata.getTables(null, null, "%", types);
 			while(rs.next()) {
 				String name = rs.getString("TABLE_NAME");
 				if(isTableNameValid(name)) {
 					Table table = new Table(name);
-					generateColumnList(table);
-					getForeignKeys(table);
+					generateColumnList(table, metadata);
+					getForeignKeys(table, metadata);
 					database.add(table);
 				} else {
 					StringBuffer message = new StringBuffer();
@@ -99,12 +88,12 @@ public class MetadataGenerator {
 		}
 	}
 	
-	private void generateColumnList(Table table) throws MetadataGenerationException {
+	private void generateColumnList(final Table table, final DatabaseMetaData metadata) throws MetadataGenerationException {
 		ResultSet rs = null;
 		try {			
-			this.getPrimaryKeys(table);
+			this.getPrimaryKeys(table, metadata);
 			
-			rs = this.metadata.getColumns(null, null, table.getName(), "%");
+			rs = metadata.getColumns(null, null, table.getName(), "%");
 			
 			while(rs.next()) {				
 				String name = rs.getString("COLUMN_NAME");
@@ -171,8 +160,8 @@ public class MetadataGenerator {
 		}
 	}
 	
-	private void getPrimaryKeys(Table table) throws SQLException {
-		ResultSet pkResultSet = this.metadata.getPrimaryKeys(null, null, table.getName());
+	private void getPrimaryKeys(Table table, final DatabaseMetaData metadata) throws SQLException {
+		ResultSet pkResultSet = metadata.getPrimaryKeys(null, null, table.getName());
 		while(pkResultSet.next()) {
 			String name = pkResultSet.getString("COLUMN_NAME");
 			short position = pkResultSet.getShort("KEY_SEQ");				
@@ -182,8 +171,8 @@ public class MetadataGenerator {
 		pkResultSet.close();		
 	}
 	
-	private void getForeignKeys(Table table) throws SQLException {
-		ResultSet rs = this.metadata.getImportedKeys(null, null, table.getName());
+	private void getForeignKeys(final Table table, final DatabaseMetaData metadata) throws SQLException {
+		ResultSet rs = metadata.getImportedKeys(null, null, table.getName());
 		int counter = 0;
 		while(rs.next()) {
 			String pkTableName = rs.getString("PKTABLE_NAME");

@@ -23,8 +23,8 @@ public class DatabaseExportToolSingleXmlFile {
 		try {
 			DatabaseConnectionCreator connCreator = new DatabaseConnectionCreator();
 			Connection connection = connCreator.getConnection(this.configuration);
-			MetadataGenerator generator = new MetadataGenerator(connection);
-			Database database = generator.generate();			
+			MetadataGenerator generator = new MetadataGenerator();
+			Database database = generator.generate(connection);			
 		} catch (DatabaseConnectionDriverLoadException exception) {
 			throw new XMLExportException("JDBC driver exception", exception);
 		} catch (DatabaseConnectionCreateException exception) {
