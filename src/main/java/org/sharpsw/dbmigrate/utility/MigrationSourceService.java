@@ -27,8 +27,8 @@ class MigrationSourceService {
 	public Database getDatabase() throws DBMigrationException {
 		try {
 			Database database = null;
-			DatabaseConnectionCreator connCreator = new DatabaseConnectionCreator(this.configuration);
-			this.connection = connCreator.getConnection();
+			DatabaseConnectionCreator connCreator = new DatabaseConnectionCreator();
+			this.connection = connCreator.getConnection(this.configuration);
 			MetadataGenerator generator = new MetadataGenerator(this.connection);
 			database = generator.generate();
 			return database;

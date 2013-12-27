@@ -6,8 +6,7 @@ public enum DatabaseVendor {
     MSSQLSERVER_2012("Microsoft SQL Server 2012"),
     POSTGRESQL("PostgreSQL 9"),
     H2("H2 Database"),
-    MYSQL("MySQL Server"),
-    XML("Flat XML");
+    MYSQL("MySQL Server");
 
     private String description;
 

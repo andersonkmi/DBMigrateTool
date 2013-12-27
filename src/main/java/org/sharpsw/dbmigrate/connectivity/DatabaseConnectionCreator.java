@@ -7,39 +7,30 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnectionCreator {
-    private DatabaseConfig configuration;
 
-    public DatabaseConnectionCreator(DatabaseConfig configuration) throws DatabaseConnectionDriverLoadException {
-        this.configuration = configuration;
-        String driverClass = this.configuration.getDriverClassName();
-
-        try {
-            Class.forName(driverClass);
-        } catch (ClassNotFoundException classNotFoundExc) {
-            StringBuilder message = new StringBuilder();
-            message.append("Error when loading the driver: '").append(driverClass).append("'");
-            throw new DatabaseConnectionDriverLoadException(message.toString(), classNotFoundExc);
-        } catch (ExceptionInInitializerError error) {
-            StringBuilder message = new StringBuilder();
-            message.append("Error when loading the driver: '").append(driverClass).append("'");
-
-            throw new DatabaseConnectionDriverLoadException(message.toString(), error);
-        } catch (LinkageError linkageErr) {
-            StringBuilder message = new StringBuilder();
-            message.append("Error when loading the driver: '").append(driverClass).append("'");
-            throw new DatabaseConnectionDriverLoadException(message.toString(), linkageErr);
-        }
-    }
-
-    public Connection getConnection() throws DatabaseConnectionCreateException {
+    public Connection getConnection(final DatabaseConfig configuration) throws DatabaseConnectionCreateException, DatabaseConnectionDriverLoadException {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(this.configuration.getConnectionString());
+            Class.forName(configuration.getDriverClassName());
+            connection = DriverManager.getConnection(configuration.getConnectionString());
             return connection;
         } catch (SQLException exception) {
             StringBuilder message = new StringBuilder();
             message.append("Error when creating a new connection to the database.");
             throw new DatabaseConnectionCreateException(message.toString(), exception);
+        } catch (ClassNotFoundException classNotFoundExc) {
+            StringBuilder message = new StringBuilder();
+            message.append("Error when loading the driver: '").append(configuration.getDriverClassName()).append("'");
+            throw new DatabaseConnectionDriverLoadException(message.toString(), classNotFoundExc);
+        } catch (ExceptionInInitializerError error) {
+            StringBuilder message = new StringBuilder();
+            message.append("Error when loading the driver: '").append(configuration.getDriverClassName()).append("'");
+
+            throw new DatabaseConnectionDriverLoadException(message.toString(), error);
+        } catch (LinkageError linkageErr) {
+            StringBuilder message = new StringBuilder();
+            message.append("Error when loading the driver: '").append(configuration.getDriverClassName()).append("'");
+            throw new DatabaseConnectionDriverLoadException(message.toString(), linkageErr);
         }
     }
 }

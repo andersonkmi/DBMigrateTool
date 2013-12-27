@@ -66,8 +66,8 @@ abstract class MigrationDestinationBaseService {
 	}
 	
 	protected void connect() throws SQLException, DatabaseConnectionDriverLoadException, DatabaseConnectionCreateException {
-		DatabaseConnectionCreator destination = new DatabaseConnectionCreator(this.configuration);
-		this.connection = destination.getConnection();
+		DatabaseConnectionCreator destination = new DatabaseConnectionCreator();
+		this.connection = destination.getConnection(this.configuration);
 		this.connection.setAutoCommit(false);
 	}
 	

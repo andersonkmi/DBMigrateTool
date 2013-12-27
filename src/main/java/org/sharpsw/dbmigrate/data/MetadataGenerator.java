@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class MetadataGenerator {
 	private Connection connection;
-	private DatabaseMetaData meta;
+	private DatabaseMetaData metadata;
 	
 	@SuppressWarnings("unused")
 	private MetadataGenerator() {
@@ -22,17 +22,17 @@ public class MetadataGenerator {
 	public Database generate() throws MetadataGenerationException {
 		try {
 			Database database = new Database("");
-			this.meta = this.connection.getMetaData();
-			String databaseProductName = this.meta.getDatabaseProductName();
-			String databaseProductVersion = this.meta.getDatabaseProductVersion();
-			int majorJDBCVersion = this.meta.getJDBCMajorVersion();
-			int minorJDBCVersion = this.meta.getJDBCMinorVersion();
+			this.metadata = this.connection.getMetaData();
+			String databaseProductName = this.metadata.getDatabaseProductName();
+			String databaseProductVersion = this.metadata.getDatabaseProductVersion();
+			int majorJDBCVersion = this.metadata.getJDBCMajorVersion();
+			int minorJDBCVersion = this.metadata.getJDBCMinorVersion();
 			
 			database.setMajorJDBCVersion(majorJDBCVersion);
 			database.setMinorJDBCVersion(minorJDBCVersion);
 			try {
-				int majorVersion = this.meta.getDatabaseMajorVersion();
-				int minorVersion = this.meta.getDatabaseMinorVersion();
+				int majorVersion = this.metadata.getDatabaseMajorVersion();
+				int minorVersion = this.metadata.getDatabaseMinorVersion();
 				database.setMajorVersion(majorVersion);
 				database.setMinorVersion(minorVersion);
 			} catch (UnsupportedOperationException opExc) {
@@ -61,14 +61,14 @@ public class MetadataGenerator {
 	}
 	
 	protected DatabaseMetaData getMetadata() {
-		return this.meta;
+		return this.metadata;
 	}
 	
 	private void generateTableList(Database database) throws MetadataGenerationException {
 		String types[] = { "TABLE" };
 		ResultSet rs = null;
 		try {
-			rs = this.meta.getTables(null, null, "%", types);
+			rs = this.metadata.getTables(null, null, "%", types);
 			while(rs.next()) {
 				String name = rs.getString("TABLE_NAME");
 				if(isTableNameValid(name)) {
@@ -104,7 +104,7 @@ public class MetadataGenerator {
 		try {			
 			this.getPrimaryKeys(table);
 			
-			rs = this.meta.getColumns(null, null, table.getName(), "%");
+			rs = this.metadata.getColumns(null, null, table.getName(), "%");
 			
 			while(rs.next()) {				
 				String name = rs.getString("COLUMN_NAME");
@@ -172,7 +172,7 @@ public class MetadataGenerator {
 	}
 	
 	private void getPrimaryKeys(Table table) throws SQLException {
-		ResultSet pkResultSet = this.meta.getPrimaryKeys(null, null, table.getName());
+		ResultSet pkResultSet = this.metadata.getPrimaryKeys(null, null, table.getName());
 		while(pkResultSet.next()) {
 			String name = pkResultSet.getString("COLUMN_NAME");
 			short position = pkResultSet.getShort("KEY_SEQ");				
@@ -183,7 +183,7 @@ public class MetadataGenerator {
 	}
 	
 	private void getForeignKeys(Table table) throws SQLException {
-		ResultSet rs = this.meta.getImportedKeys(null, null, table.getName());
+		ResultSet rs = this.metadata.getImportedKeys(null, null, table.getName());
 		int counter = 0;
 		while(rs.next()) {
 			String pkTableName = rs.getString("PKTABLE_NAME");
