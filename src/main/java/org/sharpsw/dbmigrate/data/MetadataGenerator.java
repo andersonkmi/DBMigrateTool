@@ -25,7 +25,7 @@ public class MetadataGenerator {
 				database.setMajorVersion(majorVersion);
 				database.setMinorVersion(minorVersion);
 			} catch (UnsupportedOperationException opExc) {
-				// TODO: Ignore such exception, but it will provide some kind of treatment later on.
+				throw new MetadataGenerationException(opExc);
 			}			
 			database.setProductName(databaseProductName);
 			database.setProductVersion(databaseProductVersion);
