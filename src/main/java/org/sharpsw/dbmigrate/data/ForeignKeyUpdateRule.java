@@ -22,4 +22,21 @@ public enum ForeignKeyUpdateRule {
 	public String getDescription() {
 		return this.description;
 	}
+	
+	public static ForeignKeyUpdateRule findById(short id) {
+		Integer ruleId = new Integer(id);
+		if(ruleId.equals(IMPORTED_KEY_NO_ACTION.getCode())) {
+			return IMPORTED_KEY_NO_ACTION;
+		} else if(ruleId.equals(IMPORTED_KEY_CASCADE.getCode())) {
+			return IMPORTED_KEY_CASCADE;
+		} else if(ruleId.equals(IMPORTED_KEY_RESTRICT.getCode())) {
+			return IMPORTED_KEY_RESTRICT;
+		} else if(ruleId.equals(IMPORTED_KEY_SET_DEFAULT.getCode())) {
+			return IMPORTED_KEY_SET_DEFAULT;
+		} else if(ruleId.equals(IMPORTED_KEY_SET_NULL.getCode())) {
+			return IMPORTED_KEY_SET_NULL;
+		} else {
+			return IMPORTED_KEY_NO_ACTION;
+		}
+	}
 }

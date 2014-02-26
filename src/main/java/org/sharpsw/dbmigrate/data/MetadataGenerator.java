@@ -181,13 +181,14 @@ public class MetadataGenerator {
 			String fkName = rs.getString("FK_NAME");
 			short updateRule = rs.getShort("UPDATE_RULE");
 			short deleteRule = rs.getShort("DELETE_RULE");
+			short keySequence = rs.getShort("KEY_SEQ");
 			
 			ForeignKey fk = new ForeignKey();
 			if(fkName != null && !fkName.isEmpty()) {
 				fk.setName(fkName);
 			} else {
 				StringBuffer buffer = new StringBuffer();
-				buffer.append("Fake_FK").append(counter);
+				buffer.append(table.getName()).append("_FK_").append(counter);
 				fk.setName(buffer.toString());
 				counter++;
 			}
@@ -195,8 +196,9 @@ public class MetadataGenerator {
 			fk.setPrimaryKeyTableName(pkTableName);
 			fk.setPrimaryKeyColumnName(pkColumnName);
 			fk.setForeignKeyColumnName(fkColumnName);
-			//fk.setDeleteRule(deleteRule);
-			//fk.setUpdateRule(updateRule);			
+			fk.setKeySequence(keySequence);
+			fk.setDeleteRule(ForeignKeyDeleteRule.findById(deleteRule));
+			fk.setUpdateRule(ForeignKeyUpdateRule.findById(updateRule));			
 		}
 		rs.close();
 	}

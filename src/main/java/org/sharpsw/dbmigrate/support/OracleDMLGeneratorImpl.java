@@ -2,6 +2,7 @@ package org.sharpsw.dbmigrate.support;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.sharpsw.dbmigrate.data.Column;
 import org.sharpsw.dbmigrate.data.Database;
@@ -28,7 +29,7 @@ public class OracleDMLGeneratorImpl implements IDMLGenerator {
 	
 	private void parse(final Table table) {
 		if(table.getName().length() <= OracleDMLGeneratorImpl.TABLE_NAME_MAX_SIZE) {
-			List<Column> columns = table.getColumns();
+			Set<Column> columns = table.getColumns();
 			int size = columns.size();
 			int counter = 0;
 			

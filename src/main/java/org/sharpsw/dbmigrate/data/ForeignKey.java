@@ -7,6 +7,7 @@ public class ForeignKey {
 	private String foreignKeyColumnName;
 	private ForeignKeyUpdateRule updateRule;
 	private ForeignKeyDeleteRule deleteRule;
+	private int keySequence;
 	
 	public ForeignKey() {
 		this.name = "";
@@ -15,6 +16,7 @@ public class ForeignKey {
 		this.foreignKeyColumnName = "";
 		this.updateRule = ForeignKeyUpdateRule.IMPORTED_KEY_NO_ACTION;
 		this.deleteRule = ForeignKeyDeleteRule.IMPORTED_KEY_NO_ACTION;
+		this.keySequence = 0;
 	}
 	
 	public void setName(String name) {
@@ -63,6 +65,14 @@ public class ForeignKey {
 	
 	public ForeignKeyUpdateRule getUpdateRule() {
 		return this.updateRule;
+	}
+	
+	public void setKeySequence(int sequence) {
+		this.keySequence = sequence;
+	}
+	
+	public int getKeySequence() {
+		return this.keySequence;
 	}
 	
 	public boolean equals(Object other) {

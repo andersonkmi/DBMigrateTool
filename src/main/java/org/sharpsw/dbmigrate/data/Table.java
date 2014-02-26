@@ -1,20 +1,22 @@
 package org.sharpsw.dbmigrate.data;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class Table implements Comparable<Table> {
 	private String name;
-	private List<Column> columns;
+	private Set<Column> columns;
 	
 	public Table() {
 		this.name = "";
-		this.columns = new LinkedList<Column>();
+		this.columns = new LinkedHashSet<Column>();
 	}
 	
 	public Table(String name) {
 		this.name = name;
-		this.columns = new LinkedList<Column>();
+		this.columns = new LinkedHashSet<Column>();
 	}
 	
 	public void setName(String name) {
@@ -36,7 +38,7 @@ public class Table implements Comparable<Table> {
 		this.columns.remove(column);
 	}
 			
-	public List<Column> getColumns() {
+	public Set<Column> getColumns() {
 		return this.columns;
 	}
 				
