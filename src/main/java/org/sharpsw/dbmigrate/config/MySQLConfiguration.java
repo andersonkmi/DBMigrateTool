@@ -1,5 +1,7 @@
 package org.sharpsw.dbmigrate.config;
 
+import static org.sharpsw.dbmigrate.config.DatabaseVendor.MYSQL;
+
 public class MySQLConfiguration implements DatabaseConfig {
 
 	private String server;
@@ -7,7 +9,6 @@ public class MySQLConfiguration implements DatabaseConfig {
 	private String database;
 	private String user;
 	private String password;
-	private String driverClassName;
 	
 	public MySQLConfiguration() {
 		this.server = "";
@@ -15,16 +16,14 @@ public class MySQLConfiguration implements DatabaseConfig {
 		this.database = "";
 		this.user = "";
 		this.password = "";
-		this.driverClassName = "";
 	}
 	
-	public MySQLConfiguration(String server, Integer port, String database, String user, String password, String driverClassName) {
+	public MySQLConfiguration(String server, Integer port, String database, String user, String password) {
 		this.server = server;
 		this.port = port;
 		this.database = database;
 		this.user = user;
 		this.password = password;
-		this.driverClassName = driverClassName;
 	}
 	
 	public void setServer(String server) {
@@ -45,10 +44,6 @@ public class MySQLConfiguration implements DatabaseConfig {
 	
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	
-	public void setDriverClassName(String driverClassName) {
-		this.driverClassName = driverClassName;
 	}
 	
 	public String getServer() {
@@ -80,12 +75,12 @@ public class MySQLConfiguration implements DatabaseConfig {
 
 	@Override
 	public DatabaseVendor getDatabaseVendor() {
-		return DatabaseVendor.MYSQL;
+		return MYSQL;
 	}
 
 	@Override
 	public String getDriverClassName() {
-		return this.driverClassName;
+		return MYSQL.getDriverClassName();
 	}
 
 }

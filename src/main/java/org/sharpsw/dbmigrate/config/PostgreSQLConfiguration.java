@@ -1,12 +1,13 @@
 package org.sharpsw.dbmigrate.config;
 
+import static org.sharpsw.dbmigrate.config.DatabaseVendor.POSTGRESQL;
+
 public class PostgreSQLConfiguration implements DatabaseConfig {
 	private String server;
 	private Integer port;
 	private String userName;
 	private String password;
 	private String database;
-	private String driverClassName;
 	
 	public PostgreSQLConfiguration() {
 		this.server = "";
@@ -14,16 +15,14 @@ public class PostgreSQLConfiguration implements DatabaseConfig {
 		this.userName = "";
 		this.password = "";
 		this.database = "";
-		this.driverClassName = "";
 	}
 	
-	public PostgreSQLConfiguration(String server, Integer port, String userName, String password, String database, String driverClassName) {
+	public PostgreSQLConfiguration(String server, Integer port, String userName, String password, String database) {
 		this.server = server;
 		this.port = port;
 		this.userName = userName;
 		this.password = password;
-		this.database = database;
-		this.driverClassName = driverClassName;
+		this.database = database;		
 	}
 	
 	public void setServer(String server) {
@@ -44,10 +43,6 @@ public class PostgreSQLConfiguration implements DatabaseConfig {
 	
 	public void setDatabase(String database) {
 		this.database = database;
-	}
-	
-	public void setDriverClassName(String driverClassName) {
-		this.driverClassName = driverClassName;
 	}
 	
 	public String getServer() {
@@ -80,12 +75,12 @@ public class PostgreSQLConfiguration implements DatabaseConfig {
 
 	@Override
 	public DatabaseVendor getDatabaseVendor() {
-		return DatabaseVendor.POSTGRESQL;
+		return POSTGRESQL;
 	}
 
 	@Override
 	public String getDriverClassName() {
-		return this.driverClassName;
+		return POSTGRESQL.getDriverClassName();
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.sharpsw.dbmigrate.config;
 
+import static org.sharpsw.dbmigrate.config.DatabaseVendor.MSSQLSERVER_2012;
+
 public class MSSQLServerConfiguration implements DatabaseConfig {
     public MSSQLServerConfiguration() {
         this.server = "";
@@ -8,26 +10,20 @@ public class MSSQLServerConfiguration implements DatabaseConfig {
         this.user = "";
         this.password = "";
         this.database = "";
-        this.driverClassName = "";
     }
 
-    public MSSQLServerConfiguration(String driverClassName, String server, String instance, Integer port, String user, String password, String database) {
+    public MSSQLServerConfiguration(String server, String instance, Integer port, String user, String password, String database) {
         this.server = server;
         this.instance = instance;
         this.port = port;
         this.user = user;
         this.password = password;
         this.database = database;
-        this.driverClassName = driverClassName;
-    }
-
-    public void setDriverClassName(String driverClassName) {
-        this.driverClassName = driverClassName;
     }
 
     @Override
     public String getDriverClassName() {
-        return this.driverClassName;
+        return MSSQLSERVER_2012.getDriverClassName();
     }
 
     public void setServer(String server) {
@@ -94,7 +90,7 @@ public class MSSQLServerConfiguration implements DatabaseConfig {
 
     @Override
     public DatabaseVendor getDatabaseVendor() {
-        return DatabaseVendor.MSSQLSERVER_2012;
+        return MSSQLSERVER_2012;
     }
 
     private String server;
@@ -103,5 +99,4 @@ public class MSSQLServerConfiguration implements DatabaseConfig {
     private String user;
     private String password;
     private String database;
-    private String driverClassName;
 }

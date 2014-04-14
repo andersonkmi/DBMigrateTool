@@ -1,12 +1,13 @@
 package org.sharpsw.dbmigrate.config;
 
+import static org.sharpsw.dbmigrate.config.DatabaseVendor.H2;
+
 public class H2Configuration implements DatabaseConfig {
 	private String server;
 	private String database;
 	private String user;
 	private String password;
 	private Integer port;
-	private String driverClassName;
 	
 	public H2Configuration() {
 		this.server = "";
@@ -14,16 +15,14 @@ public class H2Configuration implements DatabaseConfig {
 		this.user = "";
 		this.password = "";
 		this.port = new Integer(9001);
-		this.driverClassName = "";
 	}
 	
-	public H2Configuration(String server, String database, Integer port, String user, String password, String driverClassName) {
+	public H2Configuration(String server, String database, Integer port, String user, String password) {
 		this.server = server;
 		this.database = database;
 		this.port = port;
 		this.user = user;
 		this.password = password;
-		this.driverClassName = driverClassName;
 	}
 	
 	public void setServer(String server) {
@@ -46,10 +45,6 @@ public class H2Configuration implements DatabaseConfig {
 		this.password = password;
 	}
 	
-	public void setDriverClassName(String driverClassName) {
-		this.driverClassName = driverClassName;
-	}
-	
 	@Override
 	public String getConnectionString() {
 		StringBuffer buffer = new StringBuffer();
@@ -59,12 +54,12 @@ public class H2Configuration implements DatabaseConfig {
 
 	@Override
 	public DatabaseVendor getDatabaseVendor() {
-		return DatabaseVendor.H2;
+		return H2;
 	}
 
 	@Override
 	public String getDriverClassName() {
-		return this.driverClassName;
+		return H2.getDriverClassName();
 	}
 
 }

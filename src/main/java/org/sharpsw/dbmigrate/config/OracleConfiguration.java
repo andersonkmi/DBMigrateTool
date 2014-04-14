@@ -1,5 +1,7 @@
 package org.sharpsw.dbmigrate.config;
 
+import static org.sharpsw.dbmigrate.config.DatabaseVendor.ORACLE_11G;
+
 public class OracleConfiguration implements DatabaseConfig {
 
     public OracleConfiguration() {
@@ -8,25 +10,19 @@ public class OracleConfiguration implements DatabaseConfig {
         this.service = "";
         this.user = "";
         this.password = "";
-        this.driverClassName = "";
     }
 
-    public OracleConfiguration(String driverClassName, String server, Integer port, String service, String user, String password) {
+    public OracleConfiguration(String server, Integer port, String service, String user, String password) {
         this.server = server;
         this.port = port;
         this.service = service;
         this.user = user;
         this.password = password;
-        this.driverClassName = driverClassName;
-    }
-
-    public void setDriverClassName(String driverClassName) {
-        this.driverClassName = driverClassName;
     }
 
     @Override
     public String getDriverClassName() {
-        return this.driverClassName;
+        return ORACLE_11G.getDriverClassName();
     }
 
     public void setServer(String server) {
@@ -80,7 +76,7 @@ public class OracleConfiguration implements DatabaseConfig {
     }
 
     public DatabaseVendor getDatabaseVendor() {
-        return DatabaseVendor.ORACLE_11G;
+        return ORACLE_11G;
     }
 
     private String server;
@@ -88,5 +84,4 @@ public class OracleConfiguration implements DatabaseConfig {
     private String service;
     private String user;
     private String password;
-    private String driverClassName;
 }
