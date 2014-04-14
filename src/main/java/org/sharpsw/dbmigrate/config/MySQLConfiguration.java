@@ -2,74 +2,20 @@ package org.sharpsw.dbmigrate.config;
 
 import static org.sharpsw.dbmigrate.config.DatabaseVendor.MYSQL;
 
-public class MySQLConfiguration implements DatabaseConfig {
-
-	private String server;
-	private Integer port;
-	private String database;
-	private String user;
-	private String password;
+public class MySQLConfiguration extends BaseDatabaseConfiguration {
 	
 	public MySQLConfiguration() {
-		this.server = "";
-		this.port = new Integer(0);
-		this.database = "";
-		this.user = "";
-		this.password = "";
+		super("", new Integer(3306), "", "", "");
 	}
 	
 	public MySQLConfiguration(String server, Integer port, String database, String user, String password) {
-		this.server = server;
-		this.port = port;
-		this.database = database;
-		this.user = user;
-		this.password = password;
+		super(server, port, database, user, password);
 	}
-	
-	public void setServer(String server) {
-		this.server = server;
-	}
-	
-	public void setPort(Integer port) {
-		this.port = port;
-	}
-	
-	public void setDatabase(String database) {
-		this.database = database;
-	}
-	
-	public void setUser(String user) {
-		this.user = user;
-	}
-	
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public String getServer() {
-		return this.server;
-	}
-	
-	public Integer getPort() {
-		return this.port;
-	}
-	
-	public String getDatabase() {
-		return this.database;
-	}
-	
-	public String getUser() {
-		return this.user;
-	}
-	
-	public String getPassword() {
-		return this.password;
-	}
-	
+		
 	@Override
 	public String getConnectionString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("jdbc:mysql://").append(this.server).append(":").append(this.port.toString()).append("/").append(this.database).append("?user=").append(this.user).append("&password=").append(this.password);
+		buffer.append("jdbc:mysql://").append(this.getServer()).append(":").append(this.getPort().toString()).append("/").append(this.getDatabase()).append("?user=").append(this.getUser()).append("&password=").append(this.getPassword());
 		return buffer.toString();
 	}
 

@@ -2,23 +2,15 @@ package org.sharpsw.dbmigrate.config;
 
 import static org.sharpsw.dbmigrate.config.DatabaseVendor.MSSQLSERVER_2012;
 
-public class MSSQLServerConfiguration implements DatabaseConfig {
+public class MSSQLServerConfiguration extends BaseDatabaseConfiguration{
     public MSSQLServerConfiguration() {
-        this.server = "";
+    	super("", new Integer(1433), "", "", "");
         this.instance = "";
-        this.port = new Integer(1433);
-        this.user = "";
-        this.password = "";
-        this.database = "";
     }
 
     public MSSQLServerConfiguration(String server, String instance, Integer port, String user, String password, String database) {
-        this.server = server;
+    	super(server, port, database, user, password);
         this.instance = instance;
-        this.port = port;
-        this.user = user;
-        this.password = password;
-        this.database = database;
     }
 
     @Override
@@ -26,65 +18,26 @@ public class MSSQLServerConfiguration implements DatabaseConfig {
         return MSSQLSERVER_2012.getDriverClassName();
     }
 
-    public void setServer(String server) {
-        this.server = server;
-    }
-
-    public void setInstance(String instance) {
-        this.instance = instance;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
-
-    public void setDatabase(String database) {
-        this.database = database;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getServer() {
-        return this.server;
-    }
-
-    public Integer getPort() {
-        return this.port;
-    }
 
     public String getInstance() {
         return this.instance;
     }
-
-    public String getDatabase() {
-        return this.database;
-    }
-
-    public String getUser() {
-        return this.user;
-    }
-
-    public String getPassword() {
-        return this.password;
+    
+    public void setInstance(final String instance) {
+    	this.instance = instance;
     }
 
     @Override
     public String getConnectionString() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("jdbc:sqlserver://").append(this.server);
+        buffer.append("jdbc:sqlserver://").append(this.getServer());
         if (!this.instance.isEmpty()) {
             buffer.append("\\").append(this.instance);
         }
-        buffer.append(":").append(this.port.toString());
-        buffer.append(";databaseName=").append(this.database);
-        buffer.append(";user=").append(this.user);
-        buffer.append(";password=").append(this.password);
+        buffer.append(":").append(this.getPort().toString());
+        buffer.append(";databaseName=").append(this.getDatabase());
+        buffer.append(";user=").append(this.getUser());
+        buffer.append(";password=").append(this.getPassword());
         return buffer.toString();
     }
 
@@ -93,10 +46,5 @@ public class MSSQLServerConfiguration implements DatabaseConfig {
         return MSSQLSERVER_2012;
     }
 
-    private String server;
     private String instance;
-    private Integer port;
-    private String user;
-    private String password;
-    private String database;
 }
