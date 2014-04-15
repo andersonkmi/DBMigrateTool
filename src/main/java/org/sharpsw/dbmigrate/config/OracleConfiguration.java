@@ -1,6 +1,6 @@
 package org.sharpsw.dbmigrate.config;
 
-import static org.sharpsw.dbmigrate.config.DatabaseVendor.ORACLE_11G;
+import static org.sharpsw.dbmigrate.config.DatabaseVendor.ORACLE;
 
 public class OracleConfiguration extends BaseDatabaseConfiguration {
 
@@ -14,7 +14,7 @@ public class OracleConfiguration extends BaseDatabaseConfiguration {
 
     @Override
     public String getDriverClassName() {
-        return ORACLE_11G.getDriverClassName();
+        return ORACLE.getDriverClassName();
     }
 
     @Override
@@ -28,6 +28,6 @@ public class OracleConfiguration extends BaseDatabaseConfiguration {
     }
 
     public DatabaseVendor getDatabaseVendor() {
-        return ORACLE_11G;
+        return ORACLE;
     }
 }
