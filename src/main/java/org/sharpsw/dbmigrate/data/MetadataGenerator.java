@@ -6,7 +6,13 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.sharpsw.dbmigrate.config.BaseDatabaseConfiguration;
+
 public class MetadataGenerator {
+	
+	public Database generate(final BaseDatabaseConfiguration configuration) throws MetadataGenerationException {
+		return null;		
+	}
 	
 	public Database generate(final Connection connection) throws MetadataGenerationException {
 		try {
