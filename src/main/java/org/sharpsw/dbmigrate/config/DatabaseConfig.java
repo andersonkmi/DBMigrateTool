@@ -6,4 +6,6 @@ public interface DatabaseConfig {
 	public DatabaseVendor getDatabaseVendor();
 
 	public String getDriverClassName();
+	
+	public String getDatabase();
 }

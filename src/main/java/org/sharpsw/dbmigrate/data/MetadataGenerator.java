@@ -6,11 +6,21 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.sharpsw.dbmigrate.config.BaseDatabaseConfiguration;
+import org.sharpsw.dbmigrate.config.DatabaseConfig;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreator;
 
 public class MetadataGenerator {
+	private DatabaseConnectionCreator dbConnectionCreator;
 	
-	public Database generate(final BaseDatabaseConfiguration configuration) throws MetadataGenerationException {
+	public MetadataGenerator() {
+		// No action performed
+	}
+	
+	public MetadataGenerator(final DatabaseConnectionCreator dbConnectionCreator) {
+		this.dbConnectionCreator = dbConnectionCreator;
+	}
+	
+	public Database generate(final DatabaseConfig configuration) throws MetadataGenerationException {
 		return null;		
 	}
 	
