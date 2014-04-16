@@ -11,32 +11,22 @@ import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreateException;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreator;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
-public class MetadataGenerator {
+public class DatabaseDataLoader {
 	private DatabaseConnectionCreator dbConnectionCreator;
 	
-	public MetadataGenerator() {
+	public DatabaseDataLoader() {
 		this.dbConnectionCreator = new DatabaseConnectionCreator();
 	}
 	
-	public MetadataGenerator(final DatabaseConnectionCreator dbConnectionCreator) {
+	public DatabaseDataLoader(final DatabaseConnectionCreator dbConnectionCreator) {
 		this.dbConnectionCreator = dbConnectionCreator;
 	}
 	
-	public Database generate(final DatabaseConfig configuration) throws MetadataGenerationException {
+	public Database generate(final DatabaseConfig configuration) throws DataLoadException {
+		Connection connection = null;
 		try {
-			Connection connection = this.dbConnectionCreator.getConnection(configuration);
-			return generate(connection);
-		} catch (DatabaseConnectionCreateException
-				| DatabaseConnectionDriverLoadException exception) {
-			StringBuilder buffer = new StringBuilder();
-			buffer.append("Exception raised when connecting to the database. Message: '").append(exception.getMessage()).append("'.");
-			throw new MetadataGenerationException(buffer.toString(), exception);
-		}
-	}
-	
-	private Database generate(final Connection connection) throws MetadataGenerationException {
-		try {
-			Database database = new Database("");
+			connection = this.dbConnectionCreator.getConnection(configuration);
+			Database database = new Database(configuration.getDatabase());
 			DatabaseMetaData metadata = connection.getMetaData();
 			String databaseProductName = metadata.getDatabaseProductName();
 			String databaseProductVersion = metadata.getDatabaseProductVersion();
@@ -51,17 +41,22 @@ public class MetadataGenerator {
 				database.setMajorVersion(majorVersion);
 				database.setMinorVersion(minorVersion);
 			} catch (UnsupportedOperationException opExc) {
-				throw new MetadataGenerationException(opExc);
+				throw new DataLoadException(opExc);
 			}			
 			database.setProductName(databaseProductName);
 			database.setProductVersion(databaseProductVersion);
 			
 			generateTableList(database, metadata);
-			return database;
+			return database;			
+		} catch (DatabaseConnectionCreateException
+				| DatabaseConnectionDriverLoadException exception) {
+			StringBuilder buffer = new StringBuilder();
+			buffer.append("Exception raised when connecting to the database. Message: '").append(exception.getMessage()).append("'.");
+			throw new DataLoadException(buffer.toString(), exception);
 		} catch (SQLException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("SQL exception raised when generating database metada.");
-			throw new MetadataGenerationException(message.toString(), exception);
+			throw new DataLoadException(message.toString(), exception);
 		} finally {
 			if(connection != null) {
 				try {
@@ -69,17 +64,13 @@ public class MetadataGenerator {
 				} catch (SQLException exception) {
 					StringBuffer message = new StringBuffer();
 					message.append("Error when closing the database connection.");
-					throw new MetadataGenerationException(message.toString(), exception);
+					throw new DataLoadException(message.toString(), exception);
 				}
 			}
 		}
 	}
 	
-	public Database generate(final String xmlFile) {
-		return null;
-	}
-	
-	private void generateTableList(final Database database, final DatabaseMetaData metadata) throws MetadataGenerationException {
+	private void generateTableList(final Database database, final DatabaseMetaData metadata) throws DataLoadException {
 		String types[] = { "TABLE" };
 		ResultSet rs = null;
 		try {
@@ -94,13 +85,13 @@ public class MetadataGenerator {
 				} else {
 					StringBuffer message = new StringBuffer();
 					message.append("The table '").append(name).append("' is not valid.");
-					throw new MetadataGenerationException(message.toString());
+					throw new DataLoadException(message.toString());
 				}
 			}
 		} catch (SQLException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when listing the tables.");
-			throw new MetadataGenerationException(message.toString(), exception);
+			throw new DataLoadException(message.toString(), exception);
 		} finally {
 			try {
 				if(rs != null) {
@@ -109,12 +100,12 @@ public class MetadataGenerator {
 			} catch (SQLException exception) {
 				StringBuffer message = new StringBuffer();
 				message.append("Error when trying to close the table result set.");
-				throw new MetadataGenerationException(message.toString(), exception);
+				throw new DataLoadException(message.toString(), exception);
 			}
 		}
 	}
 	
-	private void generateColumnList(final Table table, final DatabaseMetaData metadata) throws MetadataGenerationException {
+	private void generateColumnList(final Table table, final DatabaseMetaData metadata) throws DataLoadException {
 		ResultSet rs = null;
 		try {			
 			this.getPrimaryKeys(table, metadata);
@@ -172,7 +163,7 @@ public class MetadataGenerator {
 		} catch (SQLException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when listing the columns for table: '").append(table).append("'");
-			throw new MetadataGenerationException(message.toString(), exception);
+			throw new DataLoadException(message.toString(), exception);
 		} finally {
 			if(rs != null) {
 				try {
@@ -180,7 +171,7 @@ public class MetadataGenerator {
 				} catch (SQLException exception) {
 					StringBuffer message = new StringBuffer();
 					message.append("Error when trying to close the column result set.");
-					throw new MetadataGenerationException(message.toString(), exception);
+					throw new DataLoadException(message.toString(), exception);
 				}
 			}
 		}
