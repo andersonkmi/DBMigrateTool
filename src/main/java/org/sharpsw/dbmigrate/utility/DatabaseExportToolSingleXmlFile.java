@@ -12,7 +12,7 @@ public class DatabaseExportToolSingleXmlFile {
 		try {
 			DatabaseConnectionCreator connCreator = new DatabaseConnectionCreator();
 			DatabaseDataLoader generator = new DatabaseDataLoader(connCreator);
-			Database database = generator.generate(config);			
+			Database database = generator.load(config);			
 		} catch (DataLoadException exception) {
 			throw new XMLExportException("Metadata error", exception);
 		}

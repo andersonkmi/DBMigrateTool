@@ -22,7 +22,7 @@ public class DatabaseDataLoader {
 		this.dbConnectionCreator = dbConnectionCreator;
 	}
 	
-	public Database generate(final DatabaseConfig configuration) throws DataLoadException {
+	public Database load(final DatabaseConfig configuration) throws DataLoadException {
 		Connection connection = null;
 		try {
 			connection = this.dbConnectionCreator.getConnection(configuration);
