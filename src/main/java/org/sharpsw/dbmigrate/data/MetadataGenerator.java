@@ -7,13 +7,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreateException;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreator;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
 public class MetadataGenerator {
 	private DatabaseConnectionCreator dbConnectionCreator;
 	
 	public MetadataGenerator() {
-		// No action performed
+		this.dbConnectionCreator = new DatabaseConnectionCreator();
 	}
 	
 	public MetadataGenerator(final DatabaseConnectionCreator dbConnectionCreator) {
@@ -21,10 +23,18 @@ public class MetadataGenerator {
 	}
 	
 	public Database generate(final DatabaseConfig configuration) throws MetadataGenerationException {
-		return null;		
+		try {
+			Connection connection = this.dbConnectionCreator.getConnection(configuration);
+			return generate(connection);
+		} catch (DatabaseConnectionCreateException
+				| DatabaseConnectionDriverLoadException exception) {
+			StringBuilder buffer = new StringBuilder();
+			buffer.append("Exception raised when connecting to the database. Message: '").append(exception.getMessage()).append("'.");
+			throw new MetadataGenerationException(buffer.toString(), exception);
+		}
 	}
 	
-	public Database generate(final Connection connection) throws MetadataGenerationException {
+	private Database generate(final Connection connection) throws MetadataGenerationException {
 		try {
 			Database database = new Database("");
 			DatabaseMetaData metadata = connection.getMetaData();
