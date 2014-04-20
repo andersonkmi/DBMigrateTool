@@ -10,15 +10,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreateException;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreator;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
 public class DatabaseDataLoader {
-    private static final Logger logger = Logger.getLogger(DatabaseDataLoader.class);
-
     private DatabaseConnectionCreator dbConnectionCreator;
 	
 	public DatabaseDataLoader() {
@@ -30,10 +27,6 @@ public class DatabaseDataLoader {
 	}
 	
 	public Database load(final DatabaseConfig configuration) throws DataLoadException {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Starting database metadata loading process");
-        }
-
         Connection connection = null;
         try {
             connection = this.dbConnectionCreator.getConnection(configuration);
