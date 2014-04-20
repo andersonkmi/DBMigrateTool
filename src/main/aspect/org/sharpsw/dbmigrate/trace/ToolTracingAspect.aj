@@ -3,7 +3,7 @@ package org.sharpsw.dbmigrate.trace;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.Signature;
 
-public aspect ToolTracingAspect pertypewithin(org.sharpsw.dbmt..*) {
+public aspect ToolTracingAspect pertypewithin(org.sharpsw.dbmigrate..*) {
     private Logger logger;
 
     pointcut traced(): execution(* *.*(..)) &&

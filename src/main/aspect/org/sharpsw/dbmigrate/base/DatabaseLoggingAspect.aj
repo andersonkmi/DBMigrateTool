@@ -6,16 +6,7 @@ import org.sharpsw.dbmigrate.data.Table;
 
 public aspect DatabaseLoggingAspect {
 	private static final Logger logger = Logger.getLogger(Database.class);
-	
-	pointcut initDatabaseObject(String schema) : call(public Database.new(String)) && args(schema);
-	before(String schema) : initDatabaseObject(schema) {
-		if(logger.isDebugEnabled()) {
-			StringBuffer log = new StringBuffer();
-			log.append("Creating a new instance of 'Database' class identified by '").append(schema).append("'");
-			logger.debug(log.toString());
-		}
-	}
-	
+		
 	pointcut setDatabaseProductName(Database db, String name) : set(private String Database.productName) && args(name) && target(db);
 	before(Database db, String name) : setDatabaseProductName(db, name) {
 		String currentName = db.getProductName();
