@@ -22,15 +22,6 @@ public class DatabaseConnectionCreator {
             StringBuilder message = new StringBuilder();
             message.append("Error when loading the driver: '").append(configuration.getDriverClassName()).append("'");
             throw new DatabaseConnectionDriverLoadException(message.toString(), classNotFoundExc);
-        } catch (ExceptionInInitializerError error) {
-            StringBuilder message = new StringBuilder();
-            message.append("Error when loading the driver: '").append(configuration.getDriverClassName()).append("'");
-
-            throw new DatabaseConnectionDriverLoadException(message.toString(), error);
-        } catch (LinkageError linkageErr) {
-            StringBuilder message = new StringBuilder();
-            message.append("Error when loading the driver: '").append(configuration.getDriverClassName()).append("'");
-            throw new DatabaseConnectionDriverLoadException(message.toString(), linkageErr);
         }
     }
 }
