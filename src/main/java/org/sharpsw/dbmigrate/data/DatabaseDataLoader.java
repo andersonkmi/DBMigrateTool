@@ -5,6 +5,10 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreateException;
@@ -71,6 +75,7 @@ public class DatabaseDataLoader {
 	}
 	
 	private void generateTableList(final Database database, final DatabaseMetaData metadata) throws DataLoadException {
+		List<String> tables = new ArrayList<String>();
 		String types[] = { "TABLE" };
 		ResultSet rs = null;
 		try {
@@ -78,10 +83,7 @@ public class DatabaseDataLoader {
 			while(rs.next()) {
 				String name = rs.getString("TABLE_NAME");
 				if(isTableNameValid(name)) {
-					Table table = new Table(name);
-					generateColumnList(table, metadata);
-					getForeignKeys(table, metadata);
-					database.add(table);
+					tables.add(name);
 				} else {
 					StringBuffer message = new StringBuffer();
 					message.append("The table '").append(name).append("' is not valid.");
@@ -103,12 +105,19 @@ public class DatabaseDataLoader {
 				throw new DataLoadException(message.toString(), exception);
 			}
 		}
+		
+		for(String table : tables) {
+			Table dbTable = new Table(table);
+			generateColumnList(dbTable, metadata);
+			database.add(dbTable);			
+		}
 	}
 	
 	private void generateColumnList(final Table table, final DatabaseMetaData metadata) throws DataLoadException {
 		ResultSet rs = null;
 		try {			
-			this.getPrimaryKeys(table, metadata);
+			Map<String, PrimaryKey> primaryKeys = this.getPrimaryKeys(table, metadata);
+			Map<String, ForeignKey> foreignKeys = this.getForeignKeys(table, metadata);
 			
 			rs = metadata.getColumns(null, null, table.getName(), "%");
 			
@@ -158,6 +167,18 @@ public class DatabaseDataLoader {
 				} else {
 					column.setIsAutoIncrement(false);
 				}
+
+				if(primaryKeys.containsKey(name)) {
+					PrimaryKey primaryKey = primaryKeys.get(name);
+					column.setIsPrimaryKey(true);
+					column.setPrimaryKeyPosition(primaryKey.getPosition());
+				}
+				
+				if(foreignKeys.containsKey(name)) {
+					ForeignKey fk = foreignKeys.get(name);
+					column.setIsForeignKey(true);
+					column.setForeignKey(fk);
+				}
 				table.add(column);
 			}
 		} catch (SQLException exception) {
@@ -177,18 +198,23 @@ public class DatabaseDataLoader {
 		}
 	}
 	
-	private void getPrimaryKeys(Table table, final DatabaseMetaData metadata) throws SQLException {
+	private Map<String, PrimaryKey> getPrimaryKeys(Table table, final DatabaseMetaData metadata) throws SQLException {
+		Map<String, PrimaryKey> keys = new LinkedHashMap<String, PrimaryKey>();
 		ResultSet pkResultSet = metadata.getPrimaryKeys(null, null, table.getName());
 		while(pkResultSet.next()) {
 			String name = pkResultSet.getString("COLUMN_NAME");
-			short position = pkResultSet.getShort("KEY_SEQ");				
-			//PrimaryKey key = new PrimaryKey(position, name);
-			//table.add(key);
+			short position = pkResultSet.getShort("KEY_SEQ");
+			PrimaryKey key = new PrimaryKey();
+			key.setColumnName(name);
+			key.setPosition(position);
+			keys.put(name, key);
 		}
 		pkResultSet.close();		
+		return keys;
 	}
 	
-	private void getForeignKeys(final Table table, final DatabaseMetaData metadata) throws SQLException {
+	private Map<String, ForeignKey> getForeignKeys(final Table table, final DatabaseMetaData metadata) throws SQLException {
+		Map<String, ForeignKey> keys = new LinkedHashMap<String, ForeignKey>();
 		ResultSet rs = metadata.getImportedKeys(null, null, table.getName());
 		int counter = 0;
 		while(rs.next()) {
@@ -215,9 +241,13 @@ public class DatabaseDataLoader {
 			fk.setForeignKeyColumnName(fkColumnName);
 			fk.setKeySequence(keySequence);
 			fk.setDeleteRule(ForeignKeyDeleteRule.findById(deleteRule));
-			fk.setUpdateRule(ForeignKeyUpdateRule.findById(updateRule));			
+			fk.setUpdateRule(ForeignKeyUpdateRule.findById(updateRule));
+			
+			keys.put(fkName, fk);
 		}
 		rs.close();
+		
+		return keys;
 	}
 	
 	boolean isTableNameValid(String name) {
