@@ -10,13 +10,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreateException;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreator;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
 public class DatabaseDataLoader {
-	private DatabaseConnectionCreator dbConnectionCreator;
+    private static final Logger logger = Logger.getLogger(DatabaseDataLoader.class);
+
+    private DatabaseConnectionCreator dbConnectionCreator;
 	
 	public DatabaseDataLoader() {
 		this.dbConnectionCreator = new DatabaseConnectionCreator();
@@ -27,52 +30,56 @@ public class DatabaseDataLoader {
 	}
 	
 	public Database load(final DatabaseConfig configuration) throws DataLoadException {
-		Connection connection = null;
-		try {
-			connection = this.dbConnectionCreator.getConnection(configuration);
-			Database database = new Database(configuration.getDatabase());
-			DatabaseMetaData metadata = connection.getMetaData();
-			String databaseProductName = metadata.getDatabaseProductName();
-			String databaseProductVersion = metadata.getDatabaseProductVersion();
-			int majorJDBCVersion = metadata.getJDBCMajorVersion();
-			int minorJDBCVersion = metadata.getJDBCMinorVersion();
-			
-			database.setMajorJDBCVersion(majorJDBCVersion);
-			database.setMinorJDBCVersion(minorJDBCVersion);
-			try {
-				int majorVersion = metadata.getDatabaseMajorVersion();
-				int minorVersion = metadata.getDatabaseMinorVersion();
-				database.setMajorVersion(majorVersion);
-				database.setMinorVersion(minorVersion);
-			} catch (UnsupportedOperationException opExc) {
-				throw new DataLoadException(opExc);
-			}			
-			database.setProductName(databaseProductName);
-			database.setProductVersion(databaseProductVersion);
-			
-			generateTableList(database, metadata);
-			return database;			
-		} catch (DatabaseConnectionCreateException
-				| DatabaseConnectionDriverLoadException exception) {
-			StringBuilder buffer = new StringBuilder();
-			buffer.append("Exception raised when connecting to the database. Message: '").append(exception.getMessage()).append("'.");
-			throw new DataLoadException(buffer.toString(), exception);
-		} catch (SQLException exception) {
-			StringBuffer message = new StringBuffer();
-			message.append("SQL exception raised when generating database metada.");
-			throw new DataLoadException(message.toString(), exception);
-		} finally {
-			if(connection != null) {
-				try {
-					connection.close();					
-				} catch (SQLException exception) {
-					StringBuffer message = new StringBuffer();
-					message.append("Error when closing the database connection.");
-					throw new DataLoadException(message.toString(), exception);
-				}
-			}
-		}
-	}
+        if (logger.isDebugEnabled()) {
+            logger.debug("Starting database metadata loading process");
+        }
+
+        Connection connection = null;
+        try {
+            connection = this.dbConnectionCreator.getConnection(configuration);
+            Database database = new Database(configuration.getDatabase());
+            DatabaseMetaData metadata = connection.getMetaData();
+            String databaseProductName = metadata.getDatabaseProductName();
+            String databaseProductVersion = metadata.getDatabaseProductVersion();
+            int majorJDBCVersion = metadata.getJDBCMajorVersion();
+            int minorJDBCVersion = metadata.getJDBCMinorVersion();
+
+            database.setMajorJDBCVersion(majorJDBCVersion);
+            database.setMinorJDBCVersion(minorJDBCVersion);
+            try {
+                int majorVersion = metadata.getDatabaseMajorVersion();
+                int minorVersion = metadata.getDatabaseMinorVersion();
+                database.setMajorVersion(majorVersion);
+                database.setMinorVersion(minorVersion);
+            } catch (UnsupportedOperationException opExc) {
+                throw new DataLoadException(opExc);
+            }
+            database.setProductName(databaseProductName);
+            database.setProductVersion(databaseProductVersion);
+
+            generateTableList(database, metadata);
+            return database;
+        } catch (DatabaseConnectionCreateException
+                | DatabaseConnectionDriverLoadException exception) {
+            StringBuilder buffer = new StringBuilder();
+            buffer.append("Exception raised when connecting to the database. Message: '").append(exception.getMessage()).append("'.");
+            throw new DataLoadException(buffer.toString(), exception);
+        } catch (SQLException exception) {
+            StringBuffer message = new StringBuffer();
+            message.append("SQL exception raised when generating database metada.");
+            throw new DataLoadException(message.toString(), exception);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException exception) {
+                    StringBuffer message = new StringBuffer();
+                    message.append("Error when closing the database connection.");
+                    throw new DataLoadException(message.toString(), exception);
+                }
+            }
+        }
+    }
 	
 	private void generateTableList(final Database database, final DatabaseMetaData metadata) throws DataLoadException {
 		List<String> tables = new ArrayList<String>();
