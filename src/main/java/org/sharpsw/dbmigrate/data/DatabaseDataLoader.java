@@ -27,100 +27,84 @@ public class DatabaseDataLoader {
 	}
 	
 	public Database load(final DatabaseConfig configuration) throws DataLoadException {
-        Connection connection = null;
-        try {
-            connection = this.dbConnectionCreator.getConnection(configuration);
-            Database database = new Database(configuration.getDatabase());
-            DatabaseMetaData metadata = connection.getMetaData();
-            String databaseProductName = metadata.getDatabaseProductName();
-            String databaseProductVersion = metadata.getDatabaseProductVersion();
-            int majorJDBCVersion = metadata.getJDBCMajorVersion();
-            int minorJDBCVersion = metadata.getJDBCMinorVersion();
-
-            database.setMajorJDBCVersion(majorJDBCVersion);
-            database.setMinorJDBCVersion(minorJDBCVersion);
-            try {
-                int majorVersion = metadata.getDatabaseMajorVersion();
-                int minorVersion = metadata.getDatabaseMinorVersion();
-                database.setMajorVersion(majorVersion);
-                database.setMinorVersion(minorVersion);
-            } catch (UnsupportedOperationException opExc) {
-                throw new DataLoadException(opExc);
-            }
-            database.setProductName(databaseProductName);
-            database.setProductVersion(databaseProductVersion);
-
-            generateTableList(database, metadata);
-            return database;
-        } catch (DatabaseConnectionCreateException
-                | DatabaseConnectionDriverLoadException exception) {
-            StringBuilder buffer = new StringBuilder();
-            buffer.append("Exception raised when connecting to the database. Message: '").append(exception.getMessage()).append("'.");
-            throw new DataLoadException(buffer.toString(), exception);
-        } catch (SQLException exception) {
-            StringBuffer message = new StringBuffer();
-            message.append("SQL exception raised when generating database metada.");
-            throw new DataLoadException(message.toString(), exception);
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException exception) {
-                    StringBuffer message = new StringBuffer();
-                    message.append("Error when closing the database connection.");
-                    throw new DataLoadException(message.toString(), exception);
-                }
-            }
-        }
+		try (Connection connection = this.createDatabaseConnection(configuration)) {
+			try {
+				Database database = this.configureDatabaseInfo(configuration, connection.getMetaData());
+				List<String> tables = generateTableList(connection.getMetaData());
+				this.processTables(database, tables, connection.getMetaData());
+				return database;							
+			} catch (SQLException exception) {
+				throw new DataLoadException(String.format("Error when loading database information: %s", exception.getMessage()), exception);
+			}
+		} catch (SQLException exception) {
+			throw new DataLoadException(String.format("Error when closing database connection: %s", exception.getMessage()), exception);
+		}
     }
 	
-	private void generateTableList(final Database database, final DatabaseMetaData metadata) throws DataLoadException {
+	private Connection createDatabaseConnection(final DatabaseConfig config) throws DataLoadException {
+		try {
+			Connection connection = this.dbConnectionCreator.getConnection(config);
+			return connection;
+		} catch (DatabaseConnectionCreateException exception) {
+			throw new DataLoadException(String.format("Error when connecting to the database: %s", exception.getMessage()), exception);
+		} catch (DatabaseConnectionDriverLoadException exception) {
+			throw new DataLoadException(String.format("Error when loading the database driver: %s", exception.getMessage()), exception);
+		}
+	}
+	
+	private Database configureDatabaseInfo(final DatabaseConfig config, DatabaseMetaData metadata) throws DataLoadException {
+		try {
+			Database database = new Database(config.getDatabase());
+			String databaseProductName = metadata.getDatabaseProductName();
+			String databaseProductVersion = metadata.getDatabaseProductVersion();
+			int majorJDBCVersion = metadata.getJDBCMajorVersion();
+			int minorJDBCVersion = metadata.getJDBCMinorVersion();
+			
+			database.setMajorJDBCVersion(majorJDBCVersion);
+			database.setMinorJDBCVersion(minorJDBCVersion);
+			int majorVersion = metadata.getDatabaseMajorVersion();
+			int minorVersion = metadata.getDatabaseMinorVersion();
+			database.setMajorVersion(majorVersion);
+			database.setMinorVersion(minorVersion);
+			database.setProductName(databaseProductName);
+			database.setProductVersion(databaseProductVersion);
+			return database;			
+		} catch (SQLException exception) {
+			throw new DataLoadException(String.format("Error when loading basic database information: %s", exception.getMessage()), exception);
+		}
+	}
+	
+	private List<String> generateTableList(final DatabaseMetaData metadata) throws DataLoadException {
 		List<String> tables = new ArrayList<String>();
 		String types[] = { "TABLE" };
-		ResultSet rs = null;
-		try {
-			rs = metadata.getTables(null, null, "%", types);
+		try (ResultSet rs = metadata.getTables(null, null, "%", types)) {
 			while(rs.next()) {
 				String name = rs.getString("TABLE_NAME");
 				if(isTableNameValid(name)) {
 					tables.add(name);
 				} else {
-					StringBuffer message = new StringBuffer();
-					message.append("The table '").append(name).append("' is not valid.");
-					throw new DataLoadException(message.toString());
+					throw new DataLoadException(String.format("The table '%s' is not valid", name));
 				}
 			}
 		} catch (SQLException exception) {
-			StringBuffer message = new StringBuffer();
-			message.append("Error when listing the tables.");
-			throw new DataLoadException(message.toString(), exception);
-		} finally {
-			try {
-				if(rs != null) {
-					rs.close();
-				} 
-			} catch (SQLException exception) {
-				StringBuffer message = new StringBuffer();
-				message.append("Error when trying to close the table result set.");
-				throw new DataLoadException(message.toString(), exception);
-			}
+			throw new DataLoadException("Error when listing the tables", exception);
 		}
-		
+		return tables;
+	}
+	
+	private void processTables(final Database database, final List<String> tables, final DatabaseMetaData metadata) throws DataLoadException {
 		for(String table : tables) {
-			Table dbTable = new Table(table);
-			generateColumnList(dbTable, metadata);
-			database.add(dbTable);			
+			Table item = new Table(table);
+			database.add(item);
+			generateColumnList(item, metadata);
 		}
 	}
 	
 	private void generateColumnList(final Table table, final DatabaseMetaData metadata) throws DataLoadException {
-		ResultSet rs = null;
-		try {			
+		try (ResultSet rs = metadata.getColumns(null, null, table.getName(), "%")){			
 			Map<String, PrimaryKey> primaryKeys = this.getPrimaryKeys(table, metadata);
 			Map<String, ForeignKey> foreignKeys = this.getForeignKeys(table, metadata);
-			
-			rs = metadata.getColumns(null, null, table.getName(), "%");
-			
+						
 			while(rs.next()) {				
 				String name = rs.getString("COLUMN_NAME");
 				int type = rs.getInt("DATA_TYPE");
@@ -185,16 +169,6 @@ public class DatabaseDataLoader {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when listing the columns for table: '").append(table).append("'");
 			throw new DataLoadException(message.toString(), exception);
-		} finally {
-			if(rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException exception) {
-					StringBuffer message = new StringBuffer();
-					message.append("Error when trying to close the column result set.");
-					throw new DataLoadException(message.toString(), exception);
-				}
-			}
 		}
 	}
 	
