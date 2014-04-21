@@ -14,9 +14,7 @@ public class MySQLConfiguration extends BaseDatabaseConfiguration {
 		
 	@Override
 	public String getConnectionString() {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("jdbc:mysql://").append(this.getServer()).append(":").append(this.getPort().toString()).append("/").append(this.getDatabase()).append("?user=").append(this.getUser()).append("&password=").append(this.getPassword());
-		return buffer.toString();
+		return String.format("jdbc:mysql://%s:%d/%s?user=%s&password=%s", this.getServer(), this.getPort(), this.getDatabase(), this.getUser(), this.getPassword());
 	}
 
 	@Override

@@ -8,4 +8,6 @@ public interface DatabaseConfig {
 	public String getDriverClassName();
 	
 	public String getDatabase();
+	
+	public String getDatabaseConfigDescription();
 }

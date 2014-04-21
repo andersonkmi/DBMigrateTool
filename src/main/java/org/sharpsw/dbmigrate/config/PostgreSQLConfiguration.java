@@ -14,9 +14,7 @@ public class PostgreSQLConfiguration extends BaseDatabaseConfiguration {
 		
 	@Override
 	public String getConnectionString() {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("jdbc:postgresql://").append(this.getServer()).append(":").append(this.getPort()).append("/").append(this.getDatabase()).append("?user=").append(this.getUser()).append("&password=").append(this.getPassword());
-		return buffer.toString();
+		return String.format("jdbc:postgresql://%s:%d/%s?user=%s&password=%s", this.getServer(), this.getPort(), this.getDatabase(), this.getUser(), this.getPassword());
 	}
 
 	@Override

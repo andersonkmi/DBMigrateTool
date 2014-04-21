@@ -4,7 +4,6 @@ public enum DatabaseVendor {
     ORACLE("Oracle", "org.jdbc.driver.OracleDriver"),
     MSSQLSERVER_2012("Microsoft SQL Server", "com.microsoft.sqlserver.jdbc.SQLServerDriver"),
     POSTGRESQL("PostgreSQL", "org.postgresql.Driver"),
-    H2("H2 Database", "org.hsqldb.jdbcDriver"),
     MYSQL("MySQL Server", "com.mysql.jdbc.Driver");
 
     private String description;

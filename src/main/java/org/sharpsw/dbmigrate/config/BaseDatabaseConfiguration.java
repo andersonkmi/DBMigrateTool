@@ -63,4 +63,8 @@ public abstract class BaseDatabaseConfiguration implements DatabaseConfig {
 	public String getDatabase() {
 		return database;
 	}
+	
+	public String getDatabaseConfigDescription() {
+		return String.format("Database config = [vendor = '%s'; server = '%s'; port = '%d'; schema = '%s'; user = '%s']", this.getDatabaseVendor().getDescription(), this.getServer(), this.getPort(), this.getDatabase(), this.getUser());
+	}
 }

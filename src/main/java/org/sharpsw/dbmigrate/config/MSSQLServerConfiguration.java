@@ -29,22 +29,17 @@ public class MSSQLServerConfiguration extends BaseDatabaseConfiguration{
 
     @Override
     public String getConnectionString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("jdbc:sqlserver://").append(this.getServer());
-        if (!this.instance.isEmpty()) {
-            buffer.append("\\").append(this.instance);
-        }
-        buffer.append(":").append(this.getPort().toString());
-        buffer.append(";databaseName=").append(this.getDatabase());
-        buffer.append(";user=").append(this.getUser());
-        buffer.append(";password=").append(this.getPassword());
-        return buffer.toString();
+    	if(this.instance.isEmpty()) {
+    		return String.format("jdbc:sqlserver://%s:%d;databaseName=%s;user=%s;password=%s", this.getServer(), this.getPort(), this.getDatabase(), this.getUser(), this.getPassword());
+    	} else {
+    		return String.format("jdbc:sqlserver://%s\\%s:%d;databaseName=%s;user=%s;password=%s", this.getServer(), this.getInstance(), this.getPort(), this.getDatabase(), this.getUser(), this.getPassword());
+    	}
     }
 
     @Override
     public DatabaseVendor getDatabaseVendor() {
         return MSSQLSERVER_2012;
     }
-
+    
     private String instance;
 }

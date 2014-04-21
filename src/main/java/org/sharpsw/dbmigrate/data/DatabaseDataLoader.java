@@ -11,18 +11,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
-import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreateException;
-import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionCreator;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactoryException;
+import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactory;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
 public class DatabaseDataLoader {
-    private DatabaseConnectionCreator dbConnectionCreator;
+    private DatabaseConnectionFactory dbConnectionCreator;
 	
 	public DatabaseDataLoader() {
-		this.dbConnectionCreator = new DatabaseConnectionCreator();
+		this.dbConnectionCreator = new DatabaseConnectionFactory();
 	}
 	
-	public DatabaseDataLoader(final DatabaseConnectionCreator dbConnectionCreator) {
+	public DatabaseDataLoader(final DatabaseConnectionFactory dbConnectionCreator) {
 		this.dbConnectionCreator = dbConnectionCreator;
 	}
 	
@@ -45,7 +45,7 @@ public class DatabaseDataLoader {
 		try {
 			Connection connection = this.dbConnectionCreator.getConnection(config);
 			return connection;
-		} catch (DatabaseConnectionCreateException exception) {
+		} catch (DatabaseConnectionFactoryException exception) {
 			throw new DataLoadException(String.format("Error when connecting to the database: %s", exception.getMessage()), exception);
 		} catch (DatabaseConnectionDriverLoadException exception) {
 			throw new DataLoadException(String.format("Error when loading the database driver: %s", exception.getMessage()), exception);

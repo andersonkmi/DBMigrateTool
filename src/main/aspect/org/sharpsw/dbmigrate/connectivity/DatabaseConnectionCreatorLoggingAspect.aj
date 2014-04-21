@@ -6,9 +6,9 @@ import org.apache.log4j.Logger;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 
 public aspect DatabaseConnectionCreatorLoggingAspect {
-	private static final Logger logger = Logger.getLogger(DatabaseConnectionCreator.class);
+	private static final Logger logger = Logger.getLogger(DatabaseConnectionFactory.class);
 	
-	pointcut getConnectionExecution(final DatabaseConfig configuration) : execution(public Connection DatabaseConnectionCreator.getConnection(DatabaseConfig)) && args(configuration);
+	pointcut getConnectionExecution(final DatabaseConfig configuration) : execution(public Connection DatabaseConnectionFactory.getConnection(DatabaseConfig)) && args(configuration);
 	
 	before(DatabaseConfig configuration) : getConnectionExecution(configuration) {
 		if(logger.isDebugEnabled()) {
