@@ -4,9 +4,9 @@ import org.apache.log4j.Logger;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 
 public aspect DatabaseDataLoaderLoggingAspect {
-	private static final Logger logger = Logger.getLogger(DatabaseDataLoader.class);
+	private static final Logger logger = Logger.getLogger(DatabaseSchemaParser.class);
 	
-	pointcut loadExecution(DatabaseConfig configuration) : execution(public Database DatabaseDataLoader.load(DatabaseConfig)) && args(configuration);
+	pointcut loadExecution(DatabaseConfig configuration) : execution(public Database DatabaseSchemaParser.load(DatabaseConfig)) && args(configuration);
 	
 	before(DatabaseConfig configuration) : loadExecution(configuration) {
 		if(logger.isDebugEnabled()) {

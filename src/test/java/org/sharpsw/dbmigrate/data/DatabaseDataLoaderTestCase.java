@@ -7,11 +7,11 @@ import org.sharpsw.dbmigrate.config.MySQLConfiguration;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactory;
 
 public class DatabaseDataLoaderTestCase {
-	private DatabaseDataLoader service;
+	private DatabaseSchemaParser service;
 	
 	@Before
 	public void setUp() throws Exception {
-		service = new DatabaseDataLoader(new DatabaseConnectionFactory());
+		service = new DatabaseSchemaParser(new DatabaseConnectionFactory());
 	}
 
 	@Test
@@ -21,7 +21,7 @@ public class DatabaseDataLoaderTestCase {
 
 			@SuppressWarnings("unused")
 			Database database = service.load(configuration);			
-		} catch (DataLoadException exception) {
+		} catch (DatabaseSchemaParseException exception) {
 			exception.printStackTrace();
 		}
 	}

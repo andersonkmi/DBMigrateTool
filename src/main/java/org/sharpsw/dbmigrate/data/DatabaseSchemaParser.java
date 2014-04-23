@@ -15,18 +15,18 @@ import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactoryException;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactory;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
-public class DatabaseDataLoader {
+public class DatabaseSchemaParser {
     private DatabaseConnectionFactory dbConnectionCreator;
 	
-	public DatabaseDataLoader() {
+	public DatabaseSchemaParser() {
 		this.dbConnectionCreator = new DatabaseConnectionFactory();
 	}
 	
-	public DatabaseDataLoader(final DatabaseConnectionFactory dbConnectionCreator) {
+	public DatabaseSchemaParser(final DatabaseConnectionFactory dbConnectionCreator) {
 		this.dbConnectionCreator = dbConnectionCreator;
 	}
 	
-	public Database load(final DatabaseConfig configuration) throws DataLoadException {
+	public Database load(final DatabaseConfig configuration) throws DatabaseSchemaParseException {
 		try (Connection connection = this.createDatabaseConnection(configuration)) {
 			try {
 				Database database = this.configureDatabaseInfo(configuration, connection.getMetaData());
@@ -34,25 +34,25 @@ public class DatabaseDataLoader {
 				this.processTables(database, tables, connection.getMetaData());
 				return database;							
 			} catch (SQLException exception) {
-				throw new DataLoadException(String.format("Error when loading database information: %s", exception.getMessage()), exception);
+				throw new DatabaseSchemaParseException(String.format("Error when loading database information: %s", exception.getMessage()), exception);
 			}
 		} catch (SQLException exception) {
-			throw new DataLoadException(String.format("Error when closing database connection: %s", exception.getMessage()), exception);
+			throw new DatabaseSchemaParseException(String.format("Error when closing database connection: %s", exception.getMessage()), exception);
 		}
     }
 	
-	private Connection createDatabaseConnection(final DatabaseConfig config) throws DataLoadException {
+	private Connection createDatabaseConnection(final DatabaseConfig config) throws DatabaseSchemaParseException {
 		try {
 			Connection connection = this.dbConnectionCreator.getConnection(config);
 			return connection;
 		} catch (DatabaseConnectionFactoryException exception) {
-			throw new DataLoadException(String.format("Error when connecting to the database: %s", exception.getMessage()), exception);
+			throw new DatabaseSchemaParseException(String.format("Error when connecting to the database: %s", exception.getMessage()), exception);
 		} catch (DatabaseConnectionDriverLoadException exception) {
-			throw new DataLoadException(String.format("Error when loading the database driver: %s", exception.getMessage()), exception);
+			throw new DatabaseSchemaParseException(String.format("Error when loading the database driver: %s", exception.getMessage()), exception);
 		}
 	}
 	
-	private Database configureDatabaseInfo(final DatabaseConfig config, DatabaseMetaData metadata) throws DataLoadException {
+	private Database configureDatabaseInfo(final DatabaseConfig config, DatabaseMetaData metadata) throws DatabaseSchemaParseException {
 		try {
 			Database database = new Database(config.getDatabase());
 			String databaseProductName = metadata.getDatabaseProductName();
@@ -70,11 +70,11 @@ public class DatabaseDataLoader {
 			database.setProductVersion(databaseProductVersion);
 			return database;			
 		} catch (SQLException exception) {
-			throw new DataLoadException(String.format("Error when loading basic database information: %s", exception.getMessage()), exception);
+			throw new DatabaseSchemaParseException(String.format("Error when loading basic database information: %s", exception.getMessage()), exception);
 		}
 	}
 	
-	private List<String> generateTableList(final DatabaseMetaData metadata) throws DataLoadException {
+	private List<String> generateTableList(final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
 		List<String> tables = new ArrayList<String>();
 		String types[] = { "TABLE" };
 		try (ResultSet rs = metadata.getTables(null, null, "%", types)) {
@@ -83,16 +83,16 @@ public class DatabaseDataLoader {
 				if(isTableNameValid(name)) {
 					tables.add(name);
 				} else {
-					throw new DataLoadException(String.format("The table '%s' is not valid", name));
+					throw new DatabaseSchemaParseException(String.format("The table '%s' is not valid", name));
 				}
 			}
 		} catch (SQLException exception) {
-			throw new DataLoadException("Error when listing the tables", exception);
+			throw new DatabaseSchemaParseException("Error when listing the tables", exception);
 		}
 		return tables;
 	}
 	
-	private void processTables(final Database database, final List<String> tables, final DatabaseMetaData metadata) throws DataLoadException {
+	private void processTables(final Database database, final List<String> tables, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
 		for(String table : tables) {
 			Table item = new Table(table);
 			database.add(item);
@@ -100,7 +100,7 @@ public class DatabaseDataLoader {
 		}
 	}
 	
-	private void generateColumnList(final Table table, final DatabaseMetaData metadata) throws DataLoadException {
+	private void generateColumnList(final Table table, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
 		try (ResultSet rs = metadata.getColumns(null, null, table.getName(), "%")){			
 			Map<String, PrimaryKey> primaryKeys = this.getPrimaryKeys(table, metadata);
 			Map<String, ForeignKey> foreignKeys = this.getForeignKeys(table, metadata);
@@ -168,7 +168,7 @@ public class DatabaseDataLoader {
 		} catch (SQLException exception) {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when listing the columns for table: '").append(table).append("'");
-			throw new DataLoadException(message.toString(), exception);
+			throw new DatabaseSchemaParseException(message.toString(), exception);
 		}
 	}
 	
