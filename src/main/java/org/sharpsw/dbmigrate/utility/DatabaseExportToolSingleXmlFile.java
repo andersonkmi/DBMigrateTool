@@ -8,7 +8,7 @@ import org.sharpsw.dbmigrate.data.DatabaseSchemaParser;
 
 public class DatabaseExportToolSingleXmlFile {
 	
-	public void export(final DatabaseConfig config) throws XMLExportException {
+	public void export(final DatabaseConfig config, final String fileName) throws XMLExportException {
 		try {
 			DatabaseConnectionFactory connCreator = new DatabaseConnectionFactory();
 			DatabaseSchemaParser generator = new DatabaseSchemaParser(connCreator);
