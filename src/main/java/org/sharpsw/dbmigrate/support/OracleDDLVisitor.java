@@ -106,7 +106,7 @@ public class OracleDDLVisitor {
             Table table = (Table) node;
             String name = table.getName();
             this.currentTable = name;
-            Set<Column> columns = table.getColumns();
+            List<Column> columns = table.getColumns();
             for (Column column : columns) {
                 //column.accept(this);
             }

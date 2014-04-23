@@ -29,7 +29,7 @@ public class OracleDMLGeneratorImpl implements IDMLGenerator {
 	
 	private void parse(final Table table) {
 		if(table.getName().length() <= OracleDMLGeneratorImpl.TABLE_NAME_MAX_SIZE) {
-			Set<Column> columns = table.getColumns();
+			List<Column> columns = table.getColumns();
 			int size = columns.size();
 			int counter = 0;
 			
