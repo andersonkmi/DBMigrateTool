@@ -2,8 +2,6 @@ package org.sharpsw.dbmigrate.utility;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.List;
 
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactory;
