@@ -10,7 +10,11 @@ public aspect DatabaseDataLoaderLoggingAspect {
 	
 	before(DatabaseConfig configuration) : loadExecution(configuration) {
 		if(logger.isDebugEnabled()) {
-			logger.debug(String.format("Invoking DatabaseDataLoader.load() method for database configuration '%s'", configuration.getConnectionString()));
+			if(configuration != null) {
+				logger.debug(String.format("Invoking DatabaseDataLoader.load() method for database configuration '%s'", configuration.getConnectionString()));				
+			} else {
+				logger.debug("Invoking DatabaseDataLoader.load() method for database configuration 'null'");
+			}
 		}
 	}
 	

@@ -17,16 +17,16 @@ import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
 public class DatabaseSchemaParser {
     private DatabaseConnectionFactory dbConnectionCreator;
-	
-	public DatabaseSchemaParser() {
-		this.dbConnectionCreator = new DatabaseConnectionFactory();
-	}
-	
+		
 	public DatabaseSchemaParser(final DatabaseConnectionFactory dbConnectionCreator) {
 		this.dbConnectionCreator = dbConnectionCreator;
 	}
 	
 	public Database load(final DatabaseConfig configuration) throws DatabaseSchemaParseException {
+		if(configuration == null) {
+			throw new DatabaseSchemaParseException("Database configuration provided is null");
+		}
+		
 		try (Connection connection = this.createDatabaseConnection(configuration)) {
 			try {
 				Database database = this.configureDatabaseInfo(configuration, connection.getMetaData());
@@ -43,6 +43,9 @@ public class DatabaseSchemaParser {
 	
 	private Connection createDatabaseConnection(final DatabaseConfig config) throws DatabaseSchemaParseException {
 		try {
+			if(this.dbConnectionCreator == null) {
+				throw new DatabaseSchemaParseException("Database connection factory instance is null");
+			}
 			Connection connection = this.dbConnectionCreator.getConnection(config);
 			return connection;
 		} catch (DatabaseConnectionFactoryException exception) {
