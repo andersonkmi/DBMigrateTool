@@ -26,4 +26,15 @@ public class DatabaseDataLoaderTestCase {
 		}
 	}
 
+	@Test(expected = DatabaseSchemaParseException.class)
+	public void testParsingWithNullDBConfigFail() throws DatabaseSchemaParseException {
+		service.load(null);
+	}
+	
+	@Test(expected = DatabaseSchemaParseException.class) 
+	public void testParsingWithNullDBConnFactoryFail() throws DatabaseSchemaParseException {
+		DatabaseSchemaParser parser = new DatabaseSchemaParser(null);
+		DatabaseConfig configuration = new MySQLConfiguration("localhost", 3306, "pagamentodigital", "root", "anderson");		
+		parser.load(configuration);
+	}
 }
