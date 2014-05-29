@@ -20,11 +20,6 @@
 			<version>4.11</version>
 		</dependency>
 		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>1.7.3</version>
-		</dependency>
-		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
@@ -69,31 +64,6 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.codehaus.mojo</groupId>
-										<artifactId>aspectj-maven-plugin</artifactId>
-										<versionRange>[1.0,)</versionRange>
-										<goals>
-											<goal>test-compile</goal>
-											<goal>compile</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
@@ -104,36 +74,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.5</version>
-				<configuration>
-					<sources>
-						<source>
-							<basedir>src/main</basedir>
-							<includes>
-								<include>**/*.java</include>
-								<include>**/*.aj</include>
-							</includes>
-							<excludes></excludes>
-						</source>
-					</sources>
-					<source>1.7</source>
-					<target>1.7</target>
-					<complianceLevel>1.7</complianceLevel>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-							<goal>test-compile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
 	</build>
 	<artifactId>DatabaseMigrateTool</artifactId>
 </project>
