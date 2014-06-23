@@ -46,6 +46,7 @@ public class DatabaseSchemaParser {
 				throw new DatabaseSchemaParseException(String.format("Error when loading database information: %s", exception.getMessage()), exception);
 			}
 		} catch (SQLException exception) {
+			logger.error(String.format("Error when closing the database connection: %s", exception.getMessage()), exception);
 			throw new DatabaseSchemaParseException(String.format("Error when closing database connection: %s", exception.getMessage()), exception);
 		}
     }
@@ -91,6 +92,10 @@ public class DatabaseSchemaParser {
 	}
 	
 	private List<String> generateTableList(final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
+		if(logger.isInfoEnabled()) {
+			logger.info("Generating tables list");
+		}
+		
 		List<String> tables = new ArrayList<String>();
 		String types[] = { "TABLE" };
 		try (ResultSet rs = metadata.getTables(null, null, "%", types)) {
@@ -109,6 +114,10 @@ public class DatabaseSchemaParser {
 	}
 	
 	private void processTables(final Database database, final List<String> tables, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
+		if(logger.isInfoEnabled()) {
+			logger.info("Processing tables");
+		}
+		
 		for(String table : tables) {
 			Table item = new Table(table);
 			generateColumnList(item, metadata);
@@ -117,6 +126,10 @@ public class DatabaseSchemaParser {
 	}
 	
 	private void generateColumnList(final Table table, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
+		if(logger.isInfoEnabled()) {
+			logger.info("Generating column list");
+		}
+		
 		try (ResultSet rs = metadata.getColumns(null, null, table.getName(), "%")){			
 			Map<String, PrimaryKey> primaryKeys = this.getPrimaryKeys(table, metadata);
 			Map<String, ForeignKey> foreignKeys = this.getForeignKeys(table, metadata);
