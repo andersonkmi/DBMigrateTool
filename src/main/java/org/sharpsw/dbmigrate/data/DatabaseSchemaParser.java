@@ -10,12 +10,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactoryException;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactory;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
 public class DatabaseSchemaParser {
+	
+	private static final Logger logger = Logger.getLogger(DatabaseSchemaParser.class);
+	
     private DatabaseConnectionFactory dbConnectionCreator;
 		
 	public DatabaseSchemaParser(final DatabaseConnectionFactory dbConnectionCreator) {
@@ -23,7 +27,12 @@ public class DatabaseSchemaParser {
 	}
 	
 	public Database load(final DatabaseConfig configuration) throws DatabaseSchemaParseException {
+		if(logger.isInfoEnabled()) {
+			logger.info("Starting the schema parsing process");
+		}
+		
 		if(configuration == null) {
+			logger.error("The configuration information is null");
 			throw new DatabaseSchemaParseException("Database configuration provided is null");
 		}
 		
@@ -42,6 +51,10 @@ public class DatabaseSchemaParser {
     }
 	
 	private Connection createDatabaseConnection(final DatabaseConfig config) throws DatabaseSchemaParseException {
+		if(logger.isInfoEnabled()) {
+			logger.info("Creating database connection");
+		}
+		
 		try {
 			if(this.dbConnectionCreator == null) {
 				throw new DatabaseSchemaParseException("Database connection factory instance is null");
