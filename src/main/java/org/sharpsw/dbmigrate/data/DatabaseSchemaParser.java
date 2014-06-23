@@ -98,8 +98,8 @@ public class DatabaseSchemaParser {
 	private void processTables(final Database database, final List<String> tables, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
 		for(String table : tables) {
 			Table item = new Table(table);
-			database.add(item);
 			generateColumnList(item, metadata);
+			database.add(item);
 		}
 	}
 	
@@ -172,6 +172,17 @@ public class DatabaseSchemaParser {
 			StringBuffer message = new StringBuffer();
 			message.append("Error when listing the columns for table: '").append(table).append("'");
 			throw new DatabaseSchemaParseException(message.toString(), exception);
+		}
+	}
+	
+	private void configureNullableColumn(Column column, ResultSet rs) throws SQLException {
+		String nullableValue = rs.getString("IS_NULLABLE");
+		int nullable = rs.getInt("NULLABLE");
+		
+		if(nullable == DatabaseMetaData.columnNullable || nullableValue.equalsIgnoreCase("yes")) {
+			column.setIsNullable(true);
+		} else {
+			column.setIsNullable(false);
 		}
 	}
 	
