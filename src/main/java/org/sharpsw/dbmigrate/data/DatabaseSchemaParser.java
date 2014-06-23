@@ -98,8 +98,8 @@ public class DatabaseSchemaParser {
 	private void processTables(final Database database, final List<String> tables, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
 		for(String table : tables) {
 			Table item = new Table(table);
-			database.add(item);
 			generateColumnList(item, metadata);
+			database.add(item);
 		}
 	}
 	
@@ -109,63 +109,17 @@ public class DatabaseSchemaParser {
 			Map<String, ForeignKey> foreignKeys = this.getForeignKeys(table, metadata);
 						
 			while(rs.next()) {				
-				String name = rs.getString("COLUMN_NAME");
-				int type = rs.getInt("DATA_TYPE");
-				int size = rs.getInt("COLUMN_SIZE");
-				BigDecimal decimalDigits = rs.getBigDecimal("DECIMAL_DIGITS");
-				int nullable = rs.getInt("NULLABLE");
-				String defaultValue = rs.getString("COLUMN_DEF");
-				int position = rs.getInt("ORDINAL_POSITION");
-				String typeName = rs.getString("TYPE_NAME");
-				String isNullable = rs.getString("IS_NULLABLE");
-				
-				String isAutoIncrement = "";
-				try {
-					isAutoIncrement = rs.getString("IS_AUTOINCREMENT");
-				} catch (SQLException sqlExc) {
-					StringBuffer message = new StringBuffer();
-					message.append("Error when trying to read column 'IS_AUTOINCREMENT': ").append(sqlExc.getMessage());
-				}
-				
-				Column column = new Column(name);
-				column.setDataType(type);
-				column.setLength(size);
-				if(decimalDigits != null) {
-					column.setPrecision(decimalDigits.intValue());
-				}
-				if(nullable == DatabaseMetaData.columnNullable || isNullable.equalsIgnoreCase("yes")) {
-					column.setIsNullable(true);
-				} else {
-					column.setIsNullable(false);
-				}
-				
-				if(defaultValue == null) {
-					column.setDefaultValue("null");
-				} else {
-					column.setDefaultValue(defaultValue);
-				}
-				
-				column.setPosition(position);
-				
-				if(isAutoIncrement.equals("YES")) {
-					column.setIsAutoIncrement(true);
-				} else if(typeName.contains("identity") || typeName.contains("COUNTER")) {
-					column.setIsAutoIncrement(true);
-				} else {
-					column.setIsAutoIncrement(false);
-				}
-
-				if(primaryKeys.containsKey(name)) {
-					PrimaryKey primaryKey = primaryKeys.get(name);
-					column.setIsPrimaryKey(true);
-					column.setPrimaryKeyPosition(primaryKey.getPosition());
-				}
-				
-				if(foreignKeys.containsKey(name)) {
-					ForeignKey fk = foreignKeys.get(name);
-					column.setIsForeignKey(true);
-					column.setForeignKey(fk);
-				}
+				Column column = new Column("");
+				configureColumnName(column, rs);
+				configureColumnDataType(column, rs);
+				configureColumnSize(column, rs);
+				configureColumnDecimalDigits(column, rs);								
+				configureNullableColumn(column, rs);
+				configureColumnDefaultValue(column, rs);
+				configureColumnPosition(column, rs);
+				configureColumnAutoIncrement(column, rs);
+				configureColumnPrimaryKey(column, primaryKeys);
+				configureColumnForeignKey(column, foreignKeys);
 				table.add(column);
 			}
 		} catch (SQLException exception) {
@@ -173,6 +127,83 @@ public class DatabaseSchemaParser {
 			message.append("Error when listing the columns for table: '").append(table).append("'");
 			throw new DatabaseSchemaParseException(message.toString(), exception);
 		}
+	}
+	
+	private void configureColumnName(Column column, ResultSet rs) throws SQLException {
+		String name = rs.getString("COLUMN_NAME");
+		column.setName(name);
+	}
+	
+	private void configureColumnDataType(Column column, ResultSet rs) throws SQLException {
+		int type = rs.getInt("DATA_TYPE");
+		column.setDataType(type);
+	}
+	
+	private void configureColumnSize(Column column, ResultSet rs) throws SQLException {
+		int size = rs.getInt("COLUMN_SIZE");
+		column.setLength(size);		
+	}
+	
+	private void configureColumnDecimalDigits(Column column, ResultSet rs) throws SQLException {
+		BigDecimal decimalDigits = rs.getBigDecimal("DECIMAL_DIGITS");		
+		if(decimalDigits != null) {
+			column.setPrecision(decimalDigits.intValue());
+		}
+	}
+	
+	private void configureNullableColumn(Column column, ResultSet rs) throws SQLException {
+		String nullableValue = rs.getString("IS_NULLABLE");
+		int nullable = rs.getInt("NULLABLE");
+		
+		if(nullable == DatabaseMetaData.columnNullable || nullableValue.equalsIgnoreCase("yes")) {
+			column.setIsNullable(true);
+		} else {
+			column.setIsNullable(false);
+		}
+	}
+	
+	private void configureColumnDefaultValue(Column column, ResultSet rs) throws SQLException {
+		String defaultValue = rs.getString("COLUMN_DEF");
+		
+		if(defaultValue == null) {
+			column.setDefaultValue("null");
+		} else {
+			column.setDefaultValue(defaultValue);
+		}
+	}
+	
+	private void configureColumnPosition(Column column, ResultSet rs) throws SQLException {
+		int position = rs.getInt("ORDINAL_POSITION");
+		column.setPosition(position);		
+	}
+		
+	private void configureColumnAutoIncrement(Column column, ResultSet rs) throws SQLException {
+		String typeName = rs.getString("TYPE_NAME");
+		String isAutoIncrement = rs.getString("IS_AUTOINCREMENT");
+		
+		if(isAutoIncrement != null && isAutoIncrement.equals("YES")) {
+			column.setIsAutoIncrement(true);
+		} else if(typeName != null && (typeName.contains("identity") || typeName.contains("COUNTER"))) {
+			column.setIsAutoIncrement(true);
+		} else {
+			column.setIsAutoIncrement(false);
+		}
+	}
+	
+	private void configureColumnPrimaryKey(Column column, Map<String, PrimaryKey> primaryKeys) throws SQLException {
+		if(primaryKeys.containsKey(column.getName())) {
+			PrimaryKey primaryKey = primaryKeys.get(column.getName());
+			column.setIsPrimaryKey(true);
+			column.setPrimaryKeyPosition(primaryKey.getPosition());
+		}		
+	}
+	
+	private void configureColumnForeignKey(Column column, Map<String, ForeignKey> foreignKeys) throws SQLException {
+		if(foreignKeys.containsKey(column.getName())) {
+			ForeignKey fk = foreignKeys.get(column.getName());
+			column.setIsForeignKey(true);
+			column.setForeignKey(fk);
+		}		
 	}
 	
 	private Map<String, PrimaryKey> getPrimaryKeys(Table table, final DatabaseMetaData metadata) throws SQLException {
