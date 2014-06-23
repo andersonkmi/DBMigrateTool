@@ -10,12 +10,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactoryException;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactory;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionDriverLoadException;
 
 public class DatabaseSchemaParser {
+	
+	private static final Logger logger = Logger.getLogger(DatabaseSchemaParser.class);
+	
     private DatabaseConnectionFactory dbConnectionCreator;
 		
 	public DatabaseSchemaParser(final DatabaseConnectionFactory dbConnectionCreator) {
@@ -23,7 +27,12 @@ public class DatabaseSchemaParser {
 	}
 	
 	public Database load(final DatabaseConfig configuration) throws DatabaseSchemaParseException {
+		if(logger.isInfoEnabled()) {
+			logger.info("Starting the schema parsing process");
+		}
+		
 		if(configuration == null) {
+			logger.error("The configuration information is null");
 			throw new DatabaseSchemaParseException("Database configuration provided is null");
 		}
 		
@@ -37,11 +46,16 @@ public class DatabaseSchemaParser {
 				throw new DatabaseSchemaParseException(String.format("Error when loading database information: %s", exception.getMessage()), exception);
 			}
 		} catch (SQLException exception) {
+			logger.error(String.format("Error when closing the database connection: %s", exception.getMessage()), exception);
 			throw new DatabaseSchemaParseException(String.format("Error when closing database connection: %s", exception.getMessage()), exception);
 		}
     }
 	
 	private Connection createDatabaseConnection(final DatabaseConfig config) throws DatabaseSchemaParseException {
+		if(logger.isInfoEnabled()) {
+			logger.info("Creating database connection");
+		}
+		
 		try {
 			if(this.dbConnectionCreator == null) {
 				throw new DatabaseSchemaParseException("Database connection factory instance is null");
@@ -78,6 +92,10 @@ public class DatabaseSchemaParser {
 	}
 	
 	private List<String> generateTableList(final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
+		if(logger.isInfoEnabled()) {
+			logger.info("Generating tables list");
+		}
+		
 		List<String> tables = new ArrayList<String>();
 		String types[] = { "TABLE" };
 		try (ResultSet rs = metadata.getTables(null, null, "%", types)) {
@@ -96,6 +114,10 @@ public class DatabaseSchemaParser {
 	}
 	
 	private void processTables(final Database database, final List<String> tables, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
+		if(logger.isInfoEnabled()) {
+			logger.info("Processing tables");
+		}
+		
 		for(String table : tables) {
 			Table item = new Table(table);
 			generateColumnList(item, metadata);
@@ -104,6 +126,10 @@ public class DatabaseSchemaParser {
 	}
 	
 	private void generateColumnList(final Table table, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
+		if(logger.isInfoEnabled()) {
+			logger.info("Generating column list");
+		}
+		
 		try (ResultSet rs = metadata.getColumns(null, null, table.getName(), "%")){			
 			Map<String, PrimaryKey> primaryKeys = this.getPrimaryKeys(table, metadata);
 			Map<String, ForeignKey> foreignKeys = this.getForeignKeys(table, metadata);
