@@ -2,7 +2,6 @@ package org.sharpsw.dbmigrate.support;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.sharpsw.dbmigrate.data.Column;
 import org.sharpsw.dbmigrate.data.Database;

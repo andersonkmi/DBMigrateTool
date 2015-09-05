@@ -2,7 +2,7 @@ package org.sharpsw.dbmigrate.config;
 
 public enum DatabaseVendor {
     ORACLE("Oracle", "org.jdbc.driver.OracleDriver"),
-    MSSQLSERVER_2012("Microsoft SQL Server", "com.microsoft.sqlserver.jdbc.SQLServerDriver"),
+    MSSQLSERVER("Microsoft SQL Server", "net.sourceforge.jtds.jdbc.Driver"),
     POSTGRESQL("PostgreSQL", "org.postgresql.Driver"),
     MYSQL("MySQL Server", "com.mysql.jdbc.Driver");
 
