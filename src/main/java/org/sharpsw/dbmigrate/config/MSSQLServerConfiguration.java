@@ -1,6 +1,6 @@
 package org.sharpsw.dbmigrate.config;
 
-import static org.sharpsw.dbmigrate.config.DatabaseVendor.MSSQLSERVER_2012;
+import static org.sharpsw.dbmigrate.config.DatabaseVendor.MSSQLSERVER;
 
 public class MSSQLServerConfiguration extends BaseDatabaseConfiguration{
     public MSSQLServerConfiguration() {
@@ -15,7 +15,7 @@ public class MSSQLServerConfiguration extends BaseDatabaseConfiguration{
 
     @Override
     public String getDriverClassName() {
-        return MSSQLSERVER_2012.getDriverClassName();
+        return MSSQLSERVER.getDriverClassName();
     }
 
 
@@ -30,15 +30,15 @@ public class MSSQLServerConfiguration extends BaseDatabaseConfiguration{
     @Override
     public String getConnectionString() {
     	if(this.instance.isEmpty()) {
-    		return String.format("jdbc:sqlserver://%s:%d;databaseName=%s;user=%s;password=%s", this.getServer(), this.getPort(), this.getDatabase(), this.getUser(), this.getPassword());
+    		return String.format("jdbc:jtds:sqlserver://%s:%d;databaseName=%s;user=%s;password=%s", this.getServer(), this.getPort(), this.getDatabase(), this.getUser(), this.getPassword());
     	} else {
-    		return String.format("jdbc:sqlserver://%s\\%s:%d;databaseName=%s;user=%s;password=%s", this.getServer(), this.getInstance(), this.getPort(), this.getDatabase(), this.getUser(), this.getPassword());
+    		return String.format("jdbc:jtds:sqlserver://%s\\%s:%d;databaseName=%s;user=%s;password=%s", this.getServer(), this.getInstance(), this.getPort(), this.getDatabase(), this.getUser(), this.getPassword());
     	}
     }
 
     @Override
     public DatabaseVendor getDatabaseVendor() {
-        return MSSQLSERVER_2012;
+        return MSSQLSERVER;
     }
     
     private String instance;
