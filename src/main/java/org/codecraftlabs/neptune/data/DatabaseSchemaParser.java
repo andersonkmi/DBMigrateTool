@@ -121,7 +121,7 @@ public class DatabaseSchemaParser {
 		for(String table : tables) {
 			Table item = new Table(table);
 			generateColumnList(item, metadata);
-			database.add(item);
+			//database.add(item);
 		}
 	}
 	

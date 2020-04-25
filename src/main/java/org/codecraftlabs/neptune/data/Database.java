@@ -1,28 +1,26 @@
 package org.codecraftlabs.neptune.data;
 
-import java.util.*;
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Database {
+    private String name;
     private String productName;
     private String productVersion;
     private int majorVersion;
     private int minorVersion;
     private int majorJDBCVersion;
     private int minorJDBCVersion;
-    private String schema;
-    private List<Table> tables;
+    private Set<Schema> schemas = new HashSet<>();
 
-    public Database(final String schema) {
-        this.schema = schema;
-        this.tables = new ArrayList<Table>();
+    public Database(String name) {
+        this.name = name;
     }
 
-    public void setSchema(String name) {
-        this.schema = name;
-    }
-
-    public String getSchema() {
-        return this.schema;
+    public String getName() {
+        return name;
     }
 
     public void setProductName(String name) {
@@ -73,18 +71,11 @@ public class Database {
         return this.minorJDBCVersion;
     }
 
-    public void add(Table table) {
-        if (!this.tables.contains(table)) {
-            this.tables.add(table);
-        }
+    public void add(@Nonnull final Schema schema) {
+        schemas.add(schema);
     }
 
-    public void remove(Table table) {
-        this.tables.remove(table);
+    public Set<Schema> getSchemas() {
+        return Collections.unmodifiableSet(schemas);
     }
-
-    public List<Table> getTables() {
-        return this.tables;
-    }
-
 }

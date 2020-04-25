@@ -1,11 +1,13 @@
 package org.codecraftlabs.neptune.data;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.codecraftlabs.neptune.config.DatabaseConfig;
 import org.codecraftlabs.neptune.config.MySQLConfiguration;
 import org.codecraftlabs.neptune.connectivity.DatabaseConnectionFactory;
 
+@Disabled
 public class DatabaseDataLoaderTestCase {
 	private DatabaseSchemaParser service;
 	
