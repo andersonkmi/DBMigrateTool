@@ -1,14 +1,14 @@
 package org.sharpsw.dbmigrate.utility;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.config.MySQLConfiguration;
 
 public class DatabaseXmlExportToolTestCase {
 	private DatabaseXmlExportTool tool;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.tool = new DatabaseXmlExportTool();
 	}

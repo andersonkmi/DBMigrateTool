@@ -1,7 +1,7 @@
 package org.sharpsw.dbmigrate.data;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sharpsw.dbmigrate.config.DatabaseConfig;
 import org.sharpsw.dbmigrate.config.MySQLConfiguration;
 import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactory;
@@ -9,7 +9,7 @@ import org.sharpsw.dbmigrate.connectivity.DatabaseConnectionFactory;
 public class DatabaseDataLoaderTestCase {
 	private DatabaseSchemaParser service;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		service = new DatabaseSchemaParser(new DatabaseConnectionFactory());
 	}
@@ -26,12 +26,12 @@ public class DatabaseDataLoaderTestCase {
 		}
 	}
 
-	@Test(expected = DatabaseSchemaParseException.class)
+	@Test
 	public void testParsingWithNullDBConfigFail() throws DatabaseSchemaParseException {
 		service.load(null);
 	}
 	
-	@Test(expected = DatabaseSchemaParseException.class) 
+	@Test
 	public void testParsingWithNullDBConnFactoryFail() throws DatabaseSchemaParseException {
 		DatabaseSchemaParser parser = new DatabaseSchemaParser(null);
 		DatabaseConfig configuration = new MySQLConfiguration("localhost", 3306, "pagamentodigital", "root", "anderson");		
