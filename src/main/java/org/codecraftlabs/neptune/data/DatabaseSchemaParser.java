@@ -35,11 +35,11 @@ public class DatabaseSchemaParser {
 			throw new DatabaseSchemaParseException("Database configuration provided is null");
 		}
 		
-		try (Connection connection = this.createDatabaseConnection(configuration)) {
+		try (Connection connection = createDatabaseConnection(configuration)) {
 			try {
-				Database database = this.configureDatabaseInfo(configuration, connection.getMetaData());
+				Database database = configureDatabaseInfo(configuration, connection.getMetaData());
 				List<String> tables = generateTableList(connection.getMetaData());
-				this.processTables(database, tables, connection.getMetaData());
+				processTables(database, tables, connection.getMetaData());
 				return database;							
 			} catch (SQLException exception) {
 				throw new DatabaseSchemaParseException(String.format("Error when loading database information: %s", exception.getMessage()), exception);
@@ -91,7 +91,7 @@ public class DatabaseSchemaParser {
 		logger.info("Generating tables list");
 
 		List<String> tables = new ArrayList<>();
-		String types[] = { "TABLE" };
+		String[] types = { "TABLE" };
 		try (ResultSet rs = metadata.getTables(null, null, "%", types)) {
 			while(rs.next()) {
 				String name = rs.getString("TABLE_NAME");
