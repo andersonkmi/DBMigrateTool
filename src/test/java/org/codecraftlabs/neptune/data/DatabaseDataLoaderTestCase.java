@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.codecraftlabs.neptune.config.DatabaseConfig;
 import org.codecraftlabs.neptune.config.MySQLConfiguration;
-import org.codecraftlabs.neptune.connectivity.DatabaseConnectionFactory;
+import org.codecraftlabs.neptune.connectivity.ConnectionFactory;
 
 @Disabled
 public class DatabaseDataLoaderTestCase {
@@ -13,7 +13,7 @@ public class DatabaseDataLoaderTestCase {
 	
 	@BeforeEach
 	public void setUp() throws Exception {
-		service = new DatabaseSchemaParser(new DatabaseConnectionFactory());
+		service = new DatabaseSchemaParser(new ConnectionFactory());
 	}
 
 	@Test

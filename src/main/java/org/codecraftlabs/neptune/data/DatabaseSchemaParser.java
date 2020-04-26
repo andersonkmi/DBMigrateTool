@@ -13,17 +13,17 @@ import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.codecraftlabs.neptune.config.DatabaseConfig;
-import org.codecraftlabs.neptune.connectivity.DatabaseConnectionFactoryException;
-import org.codecraftlabs.neptune.connectivity.DatabaseConnectionFactory;
-import org.codecraftlabs.neptune.connectivity.DatabaseConnectionDriverLoadException;
+import org.codecraftlabs.neptune.connectivity.ConnectionFactoryException;
+import org.codecraftlabs.neptune.connectivity.ConnectionFactory;
+import org.codecraftlabs.neptune.connectivity.DatabaseDriverLoadException;
 
 public class DatabaseSchemaParser {
 	
 	private static final Logger logger = Logger.getLogger(DatabaseSchemaParser.class);
 	
-    private final DatabaseConnectionFactory dbConnectionCreator;
+    private final ConnectionFactory dbConnectionCreator;
 		
-	public DatabaseSchemaParser(final DatabaseConnectionFactory dbConnectionCreator) {
+	public DatabaseSchemaParser(final ConnectionFactory dbConnectionCreator) {
 		this.dbConnectionCreator = dbConnectionCreator;
 	}
 	
@@ -58,9 +58,9 @@ public class DatabaseSchemaParser {
 				throw new DatabaseSchemaParseException("Database connection factory instance is null");
 			}
 			return this.dbConnectionCreator.getConnection(config);
-		} catch (DatabaseConnectionFactoryException exception) {
+		} catch (ConnectionFactoryException exception) {
 			throw new DatabaseSchemaParseException(String.format("Error when connecting to the database: %s", exception.getMessage()), exception);
-		} catch (DatabaseConnectionDriverLoadException exception) {
+		} catch (DatabaseDriverLoadException exception) {
 			throw new DatabaseSchemaParseException(String.format("Error when loading the database driver: %s", exception.getMessage()), exception);
 		}
 	}
