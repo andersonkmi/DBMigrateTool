@@ -3,7 +3,7 @@ package org.codecraftlabs.neptune.config;
 public class OracleConfiguration extends BaseDatabaseConfiguration {
 
     public OracleConfiguration() {
-    	super("", new Integer(1521), "", "", "");
+    	super("", 1521, "", "", "");
     }
 
     public OracleConfiguration(String server, Integer port, String service, String user, String password) {

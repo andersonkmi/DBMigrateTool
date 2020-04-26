@@ -4,7 +4,7 @@ import static org.codecraftlabs.neptune.config.DatabaseVendor.MSSQLSERVER;
 
 public class MSSQLServerConfiguration extends BaseDatabaseConfiguration{
     public MSSQLServerConfiguration() {
-    	super("", new Integer(1433), "", "", "");
+    	super("", 1433, "", "", "");
         this.instance = "";
     }
 

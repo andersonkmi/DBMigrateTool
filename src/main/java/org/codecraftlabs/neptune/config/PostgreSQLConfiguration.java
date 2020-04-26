@@ -3,7 +3,7 @@ package org.codecraftlabs.neptune.config;
 public class PostgreSQLConfiguration extends BaseDatabaseConfiguration {
 	
 	public PostgreSQLConfiguration() {
-		super("", new Integer(5432), "", "", "");
+		super("", 5432, "", "", "");
 	}
 	
 	public PostgreSQLConfiguration(String server, Integer port, String userName, String password, String database) {

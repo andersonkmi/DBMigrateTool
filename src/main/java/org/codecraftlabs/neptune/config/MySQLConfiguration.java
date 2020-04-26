@@ -5,7 +5,7 @@ import static org.codecraftlabs.neptune.config.DatabaseVendor.MYSQL;
 public class MySQLConfiguration extends BaseDatabaseConfiguration {
 	
 	public MySQLConfiguration() {
-		super("", new Integer(3306), "", "", "");
+		super("", 3306, "", "", "");
 	}
 	
 	public MySQLConfiguration(String server, Integer port, String database, String user, String password) {
