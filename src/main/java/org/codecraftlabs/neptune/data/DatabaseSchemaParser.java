@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.codecraftlabs.neptune.config.DatabaseConfig;
@@ -20,17 +21,15 @@ public class DatabaseSchemaParser {
 	
 	private static final Logger logger = Logger.getLogger(DatabaseSchemaParser.class);
 	
-    private DatabaseConnectionFactory dbConnectionCreator;
+    private final DatabaseConnectionFactory dbConnectionCreator;
 		
 	public DatabaseSchemaParser(final DatabaseConnectionFactory dbConnectionCreator) {
 		this.dbConnectionCreator = dbConnectionCreator;
 	}
 	
 	public Database load(final DatabaseConfig configuration) throws DatabaseSchemaParseException {
-		if(logger.isInfoEnabled()) {
-			logger.info("Starting the schema parsing process");
-		}
-		
+		logger.info("Starting the schema parsing process");
+
 		if(configuration == null) {
 			logger.error("The configuration information is null");
 			throw new DatabaseSchemaParseException("Database configuration provided is null");
@@ -52,16 +51,13 @@ public class DatabaseSchemaParser {
     }
 	
 	private Connection createDatabaseConnection(final DatabaseConfig config) throws DatabaseSchemaParseException {
-		if(logger.isInfoEnabled()) {
-			logger.info("Creating database connection");
-		}
-		
+		logger.info("Creating database connection");
+
 		try {
 			if(this.dbConnectionCreator == null) {
 				throw new DatabaseSchemaParseException("Database connection factory instance is null");
 			}
-			Connection connection = this.dbConnectionCreator.getConnection(config);
-			return connection;
+			return this.dbConnectionCreator.getConnection(config);
 		} catch (DatabaseConnectionFactoryException exception) {
 			throw new DatabaseSchemaParseException(String.format("Error when connecting to the database: %s", exception.getMessage()), exception);
 		} catch (DatabaseConnectionDriverLoadException exception) {
@@ -92,11 +88,9 @@ public class DatabaseSchemaParser {
 	}
 	
 	private List<String> generateTableList(final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
-		if(logger.isInfoEnabled()) {
-			logger.info("Generating tables list");
-		}
-		
-		List<String> tables = new ArrayList<String>();
+		logger.info("Generating tables list");
+
+		List<String> tables = new ArrayList<>();
 		String types[] = { "TABLE" };
 		try (ResultSet rs = metadata.getTables(null, null, "%", types)) {
 			while(rs.next()) {
@@ -114,10 +108,8 @@ public class DatabaseSchemaParser {
 	}
 	
 	private void processTables(final Database database, final List<String> tables, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
-		if(logger.isInfoEnabled()) {
-			logger.info("Processing tables");
-		}
-		
+		logger.info("Processing tables");
+
 		for(String table : tables) {
 			Table item = new Table(table);
 			generateColumnList(item, metadata);
@@ -126,10 +118,8 @@ public class DatabaseSchemaParser {
 	}
 	
 	private void generateColumnList(final Table table, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
-		if(logger.isInfoEnabled()) {
-			logger.info("Generating column list");
-		}
-		
+		logger.info("Generating column list");
+
 		try (ResultSet rs = metadata.getColumns(null, null, table.getName(), "%")){			
 			Map<String, PrimaryKey> primaryKeys = this.getPrimaryKeys(table, metadata);
 			Map<String, ForeignKey> foreignKeys = this.getForeignKeys(table, metadata);
@@ -149,9 +139,7 @@ public class DatabaseSchemaParser {
 				table.add(column);
 			}
 		} catch (SQLException exception) {
-			StringBuffer message = new StringBuffer();
-			message.append("Error when listing the columns for table: '").append(table).append("'");
-			throw new DatabaseSchemaParseException(message.toString(), exception);
+			throw new DatabaseSchemaParseException("Error when listing the columns for table: '" + table + "'", exception);
 		}
 	}
 	
@@ -180,22 +168,13 @@ public class DatabaseSchemaParser {
 	private void configureNullableColumn(Column column, ResultSet rs) throws SQLException {
 		String nullableValue = rs.getString("IS_NULLABLE");
 		int nullable = rs.getInt("NULLABLE");
-		
-		if(nullable == DatabaseMetaData.columnNullable || nullableValue.equalsIgnoreCase("yes")) {
-			column.setIsNullable(true);
-		} else {
-			column.setIsNullable(false);
-		}
+
+		column.setIsNullable(nullable == DatabaseMetaData.columnNullable || nullableValue.equalsIgnoreCase("yes"));
 	}
 	
 	private void configureColumnDefaultValue(Column column, ResultSet rs) throws SQLException {
 		String defaultValue = rs.getString("COLUMN_DEF");
-		
-		if(defaultValue == null) {
-			column.setDefaultValue("null");
-		} else {
-			column.setDefaultValue(defaultValue);
-		}
+		column.setDefaultValue(Objects.requireNonNullElse(defaultValue, "null"));
 	}
 	
 	private void configureColumnPosition(Column column, ResultSet rs) throws SQLException {
@@ -207,16 +186,12 @@ public class DatabaseSchemaParser {
 		String typeName = rs.getString("TYPE_NAME");
 		String isAutoIncrement = rs.getString("IS_AUTOINCREMENT");
 		
-		if(isAutoIncrement != null && isAutoIncrement.equals("YES")) {
+		if (isAutoIncrement != null && isAutoIncrement.equals("YES")) {
 			column.setIsAutoIncrement(true);
-		} else if(typeName != null && (typeName.contains("identity") || typeName.contains("COUNTER"))) {
-			column.setIsAutoIncrement(true);
-		} else {
-			column.setIsAutoIncrement(false);
-		}
+		} else column.setIsAutoIncrement(typeName != null && (typeName.contains("identity") || typeName.contains("COUNTER")));
 	}
 	
-	private void configureColumnPrimaryKey(Column column, Map<String, PrimaryKey> primaryKeys) throws SQLException {
+	private void configureColumnPrimaryKey(Column column, Map<String, PrimaryKey> primaryKeys) {
 		if(primaryKeys.containsKey(column.getName())) {
 			PrimaryKey primaryKey = primaryKeys.get(column.getName());
 			column.setIsPrimaryKey(true);
@@ -224,7 +199,7 @@ public class DatabaseSchemaParser {
 		}		
 	}
 	
-	private void configureColumnForeignKey(Column column, Map<String, ForeignKey> foreignKeys) throws SQLException {
+	private void configureColumnForeignKey(Column column, Map<String, ForeignKey> foreignKeys) {
 		if(foreignKeys.containsKey(column.getName())) {
 			ForeignKey fk = foreignKeys.get(column.getName());
 			column.setIsForeignKey(true);
@@ -233,7 +208,7 @@ public class DatabaseSchemaParser {
 	}
 	
 	private Map<String, PrimaryKey> getPrimaryKeys(Table table, final DatabaseMetaData metadata) throws SQLException {
-		Map<String, PrimaryKey> keys = new LinkedHashMap<String, PrimaryKey>();
+		Map<String, PrimaryKey> keys = new LinkedHashMap<>();
 		ResultSet pkResultSet = metadata.getPrimaryKeys(null, null, table.getName());
 		while(pkResultSet.next()) {
 			String name = pkResultSet.getString("COLUMN_NAME");
@@ -248,7 +223,7 @@ public class DatabaseSchemaParser {
 	}
 	
 	private Map<String, ForeignKey> getForeignKeys(final Table table, final DatabaseMetaData metadata) throws SQLException {
-		Map<String, ForeignKey> keys = new LinkedHashMap<String, ForeignKey>();
+		Map<String, ForeignKey> keys = new LinkedHashMap<>();
 		ResultSet rs = metadata.getImportedKeys(null, null, table.getName());
 		int counter = 0;
 		while(rs.next()) {
@@ -264,9 +239,7 @@ public class DatabaseSchemaParser {
 			if(fkName != null && !fkName.isEmpty()) {
 				fk.setName(fkName);
 			} else {
-				StringBuffer buffer = new StringBuffer();
-				buffer.append(table.getName()).append("_FK_").append(counter);
-				fk.setName(buffer.toString());
+				fk.setName(table.getName() + "_FK_" + counter);
 				counter++;
 			}
 			
