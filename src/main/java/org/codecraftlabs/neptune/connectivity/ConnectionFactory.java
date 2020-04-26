@@ -11,16 +11,12 @@ public class ConnectionFactory {
 	private static final Logger logger = Logger.getLogger(ConnectionFactory.class);
 	
     public Connection getConnection(final DatabaseConfig configuration) throws ConnectionFactoryException, DatabaseDriverLoadException {
-    	if(logger.isInfoEnabled()) {
-    		logger.info("Obtaining a new database connection.");
-    	}
-    	
+        logger.info("Obtaining a new database connection.");
         try {
             Class.forName(configuration.getDriverClassName());
             return DriverManager.getConnection(configuration.getConnectionString());
         } catch (SQLException exception) {
         	logger.error(String.format("Error when creating a new database connection: %s", exception.getMessage()), exception);
-        	
             throw new ConnectionFactoryException(String.format("Error when creating a new connection to the database: %s", exception.getMessage()), exception);
         } catch (ClassNotFoundException classNotFoundExc) {
         	logger.error(String.format("Error when loading database driver: %s", classNotFoundExc.getMessage()), classNotFoundExc);
