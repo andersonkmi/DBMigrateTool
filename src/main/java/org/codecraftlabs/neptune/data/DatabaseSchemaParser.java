@@ -5,11 +5,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.codecraftlabs.neptune.config.DatabaseConfig;
@@ -17,10 +13,10 @@ import org.codecraftlabs.neptune.connectivity.ConnectionFactoryException;
 import org.codecraftlabs.neptune.connectivity.ConnectionFactory;
 import org.codecraftlabs.neptune.connectivity.DatabaseDriverLoadException;
 
+import javax.annotation.Nonnull;
+
 public class DatabaseSchemaParser {
-	
 	private static final Logger logger = Logger.getLogger(DatabaseSchemaParser.class);
-	
     private final ConnectionFactory dbConnectionCreator;
 		
 	public DatabaseSchemaParser(final ConnectionFactory dbConnectionCreator) {
@@ -28,18 +24,22 @@ public class DatabaseSchemaParser {
 	}
 	
 	public Database load(final DatabaseConfig configuration) throws DatabaseSchemaParseException {
-		logger.info("Starting the schema parsing process");
-
 		if(configuration == null) {
 			logger.error("The configuration information is null");
 			throw new DatabaseSchemaParseException("Database configuration provided is null");
 		}
-		
+
+		logger.info("Starting the schema parsing process");
 		try (Connection connection = createDatabaseConnection(configuration)) {
 			try {
 				Database database = configureDatabaseInfo(configuration, connection.getMetaData());
-				List<String> tables = generateTableList(connection.getMetaData());
-				processTables(database, tables, connection.getMetaData());
+				List<String> schemas = generateSchemaList(connection.getMetaData());
+				Map<String, List<String>> tablesPerSchema = new HashMap<>();
+				for (String schema : schemas) {
+					List<String> tables = generateTableList(connection.getMetaData(), schema);
+					tablesPerSchema.put(schema, tables);
+				}
+				processTables(database, tablesPerSchema, connection.getMetaData());
 				return database;							
 			} catch (SQLException exception) {
 				throw new DatabaseSchemaParseException(String.format("Error when loading database information: %s", exception.getMessage()), exception);
@@ -86,13 +86,29 @@ public class DatabaseSchemaParser {
 			throw new DatabaseSchemaParseException(String.format("Error when loading basic database information: %s", exception.getMessage()), exception);
 		}
 	}
+
+	@Nonnull
+	private List<String> generateSchemaList(@Nonnull final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
+		logger.info("Generating schema list");
+
+		List<String> schemas = new ArrayList<>();
+		try (ResultSet rs = metadata.getSchemas()) {
+			while(rs.next()) {
+				String schemaName = rs.getString("TABLE_SCHEM");
+				schemas.add(schemaName);
+			}
+			return schemas;
+		} catch (SQLException exception) {
+			throw new DatabaseSchemaParseException("Error when listing schemas", exception);
+		}
+	}
 	
-	private List<String> generateTableList(final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
+	private List<String> generateTableList(final DatabaseMetaData metadata, @Nonnull final String schema) throws DatabaseSchemaParseException {
 		logger.info("Generating tables list");
 
 		List<String> tables = new ArrayList<>();
 		String[] types = { "TABLE" };
-		try (ResultSet rs = metadata.getTables(null, null, "%", types)) {
+		try (ResultSet rs = metadata.getTables(null, schema, "%", types)) {
 			while(rs.next()) {
 				String name = rs.getString("TABLE_NAME");
 				if(isTableNameValid(name)) {
@@ -107,13 +123,17 @@ public class DatabaseSchemaParser {
 		return tables;
 	}
 	
-	private void processTables(final Database database, final List<String> tables, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
-		logger.info("Processing tables");
+	private void processTables(final Database database, final Map<String, List<String>> tablesPerSchema, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
+		logger.info("Processing tables per schema");
 
-		for(String table : tables) {
-			Table item = new Table(table);
-			generateColumnList(item, metadata);
-			//database.add(item);
+		for (Map.Entry<String, List<String>> item : tablesPerSchema.entrySet()) {
+			Schema schema = new Schema(item.getKey());
+			for(String tableName : item.getValue()) {
+				Table table = new Table(tableName);
+				generateColumnList(table, metadata);
+				schema.add(table);
+			}
+			database.add(schema);
 		}
 	}
 	
