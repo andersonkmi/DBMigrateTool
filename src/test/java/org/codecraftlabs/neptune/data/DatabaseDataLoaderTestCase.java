@@ -1,42 +1,18 @@
 package org.codecraftlabs.neptune.data;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.codecraftlabs.neptune.config.DatabaseConfig;
-import org.codecraftlabs.neptune.config.MySQLConfiguration;
-import org.codecraftlabs.neptune.connectivity.ConnectionFactory;
+import org.codecraftlabs.neptune.config.PostgreSQLConfiguration;
+import org.codecraftlabs.neptune.utility.DatabaseJsonExportTool;
+import org.codecraftlabs.neptune.utility.DatabaseSchemaExportException;
+import org.junit.jupiter.api.Test;
 
-@Disabled
-public class DatabaseDataLoaderTestCase {
-	private DatabaseSchemaParser service;
-	
-	@BeforeEach
-	public void setUp() throws Exception {
-		service = new DatabaseSchemaParser(new ConnectionFactory());
-	}
-
+class DatabaseJsonExportToolTestCase {
 	@Test
-	public void testMysqlLoaderOK() {
-		try {
-			DatabaseConfig configuration = new MySQLConfiguration("localhost", 3306, "pagamentodigital", "root", "anderson");
+	public void testCase001() throws DatabaseSchemaExportException {
+		DatabaseConfig config = new PostgreSQLConfiguration("localhost", 5432, "postgres", "postgres", "maui");
 
-			@SuppressWarnings("unused")
-			Database database = service.load(configuration);			
-		} catch (DatabaseSchemaParseException exception) {
-			exception.printStackTrace();
-		}
-	}
-
-	@Test
-	public void testParsingWithNullDBConfigFail() throws DatabaseSchemaParseException {
-		service.load(null);
-	}
-	
-	@Test
-	public void testParsingWithNullDBConnFactoryFail() throws DatabaseSchemaParseException {
-		DatabaseSchemaParser parser = new DatabaseSchemaParser(null);
-		DatabaseConfig configuration = new MySQLConfiguration("localhost", 3306, "pagamentodigital", "root", "anderson");		
-		parser.load(configuration);
+		DatabaseJsonExportTool tool = new DatabaseJsonExportTool();
+		String json = tool.export(config);
+		System.out.println(json);
 	}
 }
