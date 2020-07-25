@@ -1,10 +1,7 @@
 package org.codecraftlabs.neptune.data;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 import org.apache.log4j.Logger;
@@ -170,7 +167,7 @@ public class DatabaseSchemaParser {
 	
 	private void configureColumnDataType(Column column, ResultSet rs) throws SQLException {
 		int type = rs.getInt("DATA_TYPE");
-		column.setDataType(type);
+		column.setDataType(JDBCType.valueOf(type));
 	}
 	
 	private void configureColumnSize(Column column, ResultSet rs) throws SQLException {

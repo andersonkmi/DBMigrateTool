@@ -1,10 +1,12 @@
 package org.codecraftlabs.neptune.data;
 
+import java.sql.JDBCType;
+
 public class Column implements Cloneable {
 	private String name;
 	private boolean isAutoIncrement;
 	private boolean isNullable;
-	private int dataType;
+	private JDBCType dataType;
 	private String defaultValue;
 	private int length;
 	private int precision;
@@ -18,7 +20,6 @@ public class Column implements Cloneable {
 		this.name = name;
 		this.isAutoIncrement = false;
 		this.isNullable = false;
-		this.dataType = 0;
 		this.defaultValue = "";
 		this.length = 0;
 		this.precision = 0;
@@ -67,11 +68,11 @@ public class Column implements Cloneable {
 		return this.isNullable;
 	}
 	
-	public int getDataType() {
+	public JDBCType getDataType() {
 		return this.dataType;
 	}
 	
-	public void setDataType(int type) {
+	public void setDataType(JDBCType type) {
 		this.dataType = type;
 	}
 	
