@@ -12,7 +12,7 @@ public class Column implements Cloneable {
 	private int precision;
 	private int position;
 	private boolean isPrimaryKey;
-	private short pkPositiom;
+	private short pkPosition;
 	private boolean isForeignKey;
 	private ForeignKey foreignKey;
 	
@@ -25,7 +25,7 @@ public class Column implements Cloneable {
 		this.precision = 0;
 		this.position = 0;
 		this.isPrimaryKey = false;
-		this.pkPositiom = 0;
+		this.pkPosition = 0;
 		this.isForeignKey = false;
 	}
 		
@@ -39,7 +39,7 @@ public class Column implements Cloneable {
 		this.precision = column.getPrecision();
 		this.position = column.getPosition();	
 		this.isPrimaryKey = column.isPrimaryKey();
-		this.pkPositiom = column.getPrimaryKeyPosition();
+		this.pkPosition = column.getPrimaryKeyPosition();
 		this.isForeignKey = column.isForeignKey();
 		this.foreignKey = column.getForeignKey();
 	}
@@ -117,11 +117,11 @@ public class Column implements Cloneable {
 	}
 	
 	public void setPrimaryKeyPosition(short position) {
-		this.pkPositiom = position;
+		this.pkPosition = position;
 	}
 	
 	public short getPrimaryKeyPosition() {
-		return this.pkPositiom;
+		return this.pkPosition;
 	}
 	
 	public void setIsForeignKey(boolean flag) {
