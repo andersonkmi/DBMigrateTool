@@ -28,22 +28,7 @@ public class Column implements Cloneable {
 		this.pkPosition = 0;
 		this.isForeignKey = false;
 	}
-		
-	public Column(final Column column) {
-		this.name = column.getName();
-		this.isAutoIncrement = column.isAutoIncrement();
-		this.isNullable = column.isNullable();
-		this.dataType = column.getDataType();
-		this.defaultValue = column.getDefaultValue();
-		this.length = column.getLength();
-		this.precision = column.getPrecision();
-		this.position = column.getPosition();	
-		this.isPrimaryKey = column.isPrimaryKey();
-		this.pkPosition = column.getPrimaryKeyPosition();
-		this.isForeignKey = column.isForeignKey();
-		this.foreignKey = column.getForeignKey();
-	}
-	
+
 	public String getName() {
 		return this.name;
 	}

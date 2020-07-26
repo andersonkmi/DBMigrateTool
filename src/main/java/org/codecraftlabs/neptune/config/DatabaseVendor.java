@@ -6,9 +6,8 @@ public enum DatabaseVendor {
     POSTGRESQL("PostgreSQL", "org.postgresql.Driver"),
     MYSQL("MySQL Server", "com.mysql.jdbc.Driver");
 
-    private String description;
-    
-    private String driverClassName;
+    private final String description;
+    private final String driverClassName;
 
     DatabaseVendor(final String descr, final String driverClassName) {
         this.description = descr;

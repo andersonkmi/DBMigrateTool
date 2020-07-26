@@ -1,6 +1,12 @@
 package org.codecraftlabs.neptune.data;
 
-import java.math.BigDecimal;
+import org.apache.log4j.Logger;
+import org.codecraftlabs.neptune.config.DatabaseConfig;
+import org.codecraftlabs.neptune.connectivity.ConnectionFactory;
+import org.codecraftlabs.neptune.connectivity.ConnectionFactoryException;
+import org.codecraftlabs.neptune.connectivity.DatabaseDriverLoadException;
+
+import javax.annotation.Nonnull;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
@@ -12,14 +18,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import org.apache.log4j.Logger;
-import org.codecraftlabs.neptune.config.DatabaseConfig;
-import org.codecraftlabs.neptune.connectivity.ConnectionFactoryException;
-import org.codecraftlabs.neptune.connectivity.ConnectionFactory;
-import org.codecraftlabs.neptune.connectivity.DatabaseDriverLoadException;
-
-import javax.annotation.Nonnull;
 
 public class DatabaseSchemaParser {
 	private static final Logger logger = Logger.getLogger(DatabaseSchemaParser.class);
@@ -36,13 +34,13 @@ public class DatabaseSchemaParser {
 		}
 
 		logger.info("Starting the schema parsing process");
-		try (Connection connection = createDatabaseConnection(configuration)) {
+		try (var connection = createDatabaseConnection(configuration)) {
 			try {
-				Database database = configureDatabaseInfo(configuration, connection.getMetaData());
-				List<String> schemas = generateSchemaList(connection.getMetaData());
+				var database = configureDatabaseInfo(configuration, connection.getMetaData());
+				var schemas = generateSchemaList(connection.getMetaData());
 				Map<String, List<String>> tablesPerSchema = new HashMap<>();
 				for (String schema : schemas) {
-					List<String> tables = generateTableList(connection.getMetaData(), schema);
+					var tables = generateTableList(connection.getMetaData(), schema);
 					tablesPerSchema.put(schema, tables);
 				}
 				processTables(database, tablesPerSchema, connection.getMetaData());
@@ -73,16 +71,17 @@ public class DatabaseSchemaParser {
 	
 	private Database configureDatabaseInfo(final DatabaseConfig config, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
 		try {
-			Database database = new Database(config.getDatabase());
-			String databaseProductName = metadata.getDatabaseProductName();
-			String databaseProductVersion = metadata.getDatabaseProductVersion();
-			int majorJDBCVersion = metadata.getJDBCMajorVersion();
-			int minorJDBCVersion = metadata.getJDBCMinorVersion();
+			var database = new Database(config.getDatabase());
+			var databaseProductName = metadata.getDatabaseProductName();
+			var databaseProductVersion = metadata.getDatabaseProductVersion();
+			var majorJDBCVersion = metadata.getJDBCMajorVersion();
+			var minorJDBCVersion = metadata.getJDBCMinorVersion();
 			
 			database.setMajorJDBCVersion(majorJDBCVersion);
 			database.setMinorJDBCVersion(minorJDBCVersion);
-			int majorVersion = metadata.getDatabaseMajorVersion();
-			int minorVersion = metadata.getDatabaseMinorVersion();
+			var majorVersion = metadata.getDatabaseMajorVersion();
+			var minorVersion = metadata.getDatabaseMinorVersion();
+
 			database.setMajorVersion(majorVersion);
 			database.setMinorVersion(minorVersion);
 			database.setProductName(databaseProductName);
@@ -170,47 +169,46 @@ public class DatabaseSchemaParser {
 	}
 	
 	private void configureColumnName(Column column, ResultSet rs) throws SQLException {
-		String name = rs.getString("COLUMN_NAME");
+		var name = rs.getString("COLUMN_NAME");
 		column.setName(name);
 	}
 	
 	private void configureColumnDataType(Column column, ResultSet rs) throws SQLException {
-		int type = rs.getInt("DATA_TYPE");
+		var type = rs.getInt("DATA_TYPE");
 		column.setDataType(JDBCType.valueOf(type));
 	}
 	
 	private void configureColumnSize(Column column, ResultSet rs) throws SQLException {
-		int size = rs.getInt("COLUMN_SIZE");
+		var size = rs.getInt("COLUMN_SIZE");
 		column.setLength(size);		
 	}
 	
 	private void configureColumnDecimalDigits(Column column, ResultSet rs) throws SQLException {
-		BigDecimal decimalDigits = rs.getBigDecimal("DECIMAL_DIGITS");		
+		var decimalDigits = rs.getBigDecimal("DECIMAL_DIGITS");
 		if(decimalDigits != null) {
 			column.setPrecision(decimalDigits.intValue());
 		}
 	}
 	
 	private void configureNullableColumn(Column column, ResultSet rs) throws SQLException {
-		String nullableValue = rs.getString("IS_NULLABLE");
+		var nullableValue = rs.getString("IS_NULLABLE");
 		int nullable = rs.getInt("NULLABLE");
-
 		column.setIsNullable(nullable == DatabaseMetaData.columnNullable || nullableValue.equalsIgnoreCase("yes"));
 	}
 	
 	private void configureColumnDefaultValue(Column column, ResultSet rs) throws SQLException {
-		String defaultValue = rs.getString("COLUMN_DEF");
+		var defaultValue = rs.getString("COLUMN_DEF");
 		column.setDefaultValue(Objects.requireNonNullElse(defaultValue, "null"));
 	}
 	
 	private void configureColumnPosition(Column column, ResultSet rs) throws SQLException {
-		int position = rs.getInt("ORDINAL_POSITION");
+		var position = rs.getInt("ORDINAL_POSITION");
 		column.setPosition(position);		
 	}
 		
 	private void configureColumnAutoIncrement(Column column, ResultSet rs) throws SQLException {
-		String typeName = rs.getString("TYPE_NAME");
-		String isAutoIncrement = rs.getString("IS_AUTOINCREMENT");
+		var typeName = rs.getString("TYPE_NAME");
+		var isAutoIncrement = rs.getString("IS_AUTOINCREMENT");
 		
 		if (isAutoIncrement != null && isAutoIncrement.equals("YES")) {
 			column.setIsAutoIncrement(true);
@@ -235,11 +233,11 @@ public class DatabaseSchemaParser {
 	
 	private Map<String, PrimaryKey> getPrimaryKeys(Table table, final DatabaseMetaData metadata) throws SQLException {
 		Map<String, PrimaryKey> keys = new LinkedHashMap<>();
-		ResultSet pkResultSet = metadata.getPrimaryKeys(null, null, table.getName());
+		var pkResultSet = metadata.getPrimaryKeys(null, null, table.getName());
 		while(pkResultSet.next()) {
-			String name = pkResultSet.getString("COLUMN_NAME");
-			short position = pkResultSet.getShort("KEY_SEQ");
-			PrimaryKey key = new PrimaryKey();
+			var name = pkResultSet.getString("COLUMN_NAME");
+			var position = pkResultSet.getShort("KEY_SEQ");
+			var key = new PrimaryKey();
 			key.setColumnName(name);
 			key.setPosition(position);
 			keys.put(name, key);
@@ -250,18 +248,18 @@ public class DatabaseSchemaParser {
 	
 	private Map<String, ForeignKey> getForeignKeys(final Table table, final DatabaseMetaData metadata) throws SQLException {
 		Map<String, ForeignKey> keys = new LinkedHashMap<>();
-		ResultSet rs = metadata.getImportedKeys(null, null, table.getName());
-		int counter = 0;
+		var rs = metadata.getImportedKeys(null, null, table.getName());
+		var counter = 0;
 		while(rs.next()) {
-			String pkTableName = rs.getString("PKTABLE_NAME");
-			String pkColumnName = rs.getString("PKCOLUMN_NAME");
-			String fkColumnName = rs.getString("FKCOLUMN_NAME");
-			String fkName = rs.getString("FK_NAME");
-			short updateRule = rs.getShort("UPDATE_RULE");
-			short deleteRule = rs.getShort("DELETE_RULE");
-			short keySequence = rs.getShort("KEY_SEQ");
+			var pkTableName = rs.getString("PKTABLE_NAME");
+			var pkColumnName = rs.getString("PKCOLUMN_NAME");
+			var fkColumnName = rs.getString("FKCOLUMN_NAME");
+			var fkName = rs.getString("FK_NAME");
+			var updateRule = rs.getShort("UPDATE_RULE");
+			var deleteRule = rs.getShort("DELETE_RULE");
+			var keySequence = rs.getShort("KEY_SEQ");
 			
-			ForeignKey fk = new ForeignKey();
+			var fk = new ForeignKey();
 			if(fkName != null && !fkName.isEmpty()) {
 				fk.setName(fkName);
 			} else {
@@ -284,7 +282,7 @@ public class DatabaseSchemaParser {
 	}
 	
 	boolean isTableNameValid(String name) {
-		boolean result = true;
+		var result = true;
 		if(name.contains(" ")) {
 			result = false;
 		}		
