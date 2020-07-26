@@ -1,13 +1,13 @@
 package org.codecraftlabs.neptune.config;
 
 public interface DatabaseConfig {
-	public String getConnectionString();
+	String getConnectionString();
 
-	public DatabaseVendor getDatabaseVendor();
+	DatabaseVendor getDatabaseVendor();
 
-	public String getDriverClassName();
+	String getDriverClassName();
 	
-	public String getDatabase();
+	String getDatabase();
 	
-	public String getDatabaseConfigDescription();
+	String getDatabaseConfigDescription();
 }

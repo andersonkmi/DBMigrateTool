@@ -1,8 +1,17 @@
 package org.codecraftlabs.neptune.data;
 
 import java.math.BigDecimal;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.JDBCType;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.codecraftlabs.neptune.config.DatabaseConfig;
@@ -62,7 +71,7 @@ public class DatabaseSchemaParser {
 		}
 	}
 	
-	private Database configureDatabaseInfo(final DatabaseConfig config, DatabaseMetaData metadata) throws DatabaseSchemaParseException {
+	private Database configureDatabaseInfo(final DatabaseConfig config, final DatabaseMetaData metadata) throws DatabaseSchemaParseException {
 		try {
 			Database database = new Database(config.getDatabase());
 			String databaseProductName = metadata.getDatabaseProductName();
