@@ -1,6 +1,6 @@
 package org.codecraftlabs.neptune.config;
 
-public class OracleConfiguration extends BaseDatabaseConfiguration {
+class OracleConfiguration extends BaseDatabaseConfiguration {
 
     public OracleConfiguration() {
     	super("", 1521, "", "", "");

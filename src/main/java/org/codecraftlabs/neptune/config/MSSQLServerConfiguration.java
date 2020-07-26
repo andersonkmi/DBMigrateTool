@@ -2,7 +2,7 @@ package org.codecraftlabs.neptune.config;
 
 import static org.codecraftlabs.neptune.config.DatabaseVendor.MSSQLSERVER;
 
-public class MSSQLServerConfiguration extends BaseDatabaseConfiguration{
+class MSSQLServerConfiguration extends BaseDatabaseConfiguration{
     public MSSQLServerConfiguration() {
     	super("", 1433, "", "", "");
         this.instance = "";

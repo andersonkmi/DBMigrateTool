@@ -2,7 +2,7 @@ package org.codecraftlabs.neptune.config;
 
 import static org.codecraftlabs.neptune.config.DatabaseVendor.MYSQL;
 
-public class MySQLConfiguration extends BaseDatabaseConfiguration {
+class MySQLConfiguration extends BaseDatabaseConfiguration {
 	
 	public MySQLConfiguration() {
 		super("", 3306, "", "", "");

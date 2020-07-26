@@ -1,7 +1,8 @@
 package org.codecraftlabs.neptune.data;
 
 import org.codecraftlabs.neptune.config.DatabaseConfig;
-import org.codecraftlabs.neptune.config.PostgreSQLConfiguration;
+import org.codecraftlabs.neptune.config.DatabaseConfigBuilder;
+import org.codecraftlabs.neptune.config.DatabaseVendor;
 import org.codecraftlabs.neptune.utility.DatabaseJsonExportTool;
 import org.codecraftlabs.neptune.utility.DatabaseSchemaExportException;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+
+import java.util.Optional;
 
 @Testcontainers
 public class DatabaseJsonExportToolTestCase {
@@ -23,7 +26,8 @@ public class DatabaseJsonExportToolTestCase {
 	public void setUp() {
 		String address = postgres.getHost();
 		Integer port = postgres.getFirstMappedPort();
-		config = new PostgreSQLConfiguration(address, port, "postgres", "postgres", "sample");
+		Optional<DatabaseConfig> result = DatabaseConfigBuilder.build(DatabaseVendor.POSTGRESQL, address, port, "postgres", "postgres", "sample");
+		result.ifPresent(databaseConfig -> config = databaseConfig);
 	}
 
 	@Test
