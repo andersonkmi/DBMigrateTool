@@ -1,4 +1,4 @@
-package org.codecraftlabs.neptune.utility;
+package org.codecraftlabs.neptune.util;
 
 public class DatabaseSchemaExportException extends Exception {
 

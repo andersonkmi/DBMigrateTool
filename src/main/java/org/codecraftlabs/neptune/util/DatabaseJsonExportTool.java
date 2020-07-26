@@ -1,4 +1,4 @@
-package org.codecraftlabs.neptune.utility;
+package org.codecraftlabs.neptune.util;
 
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
