@@ -17,13 +17,13 @@ public class DatabaseJsonExportToolTestCase {
 	private DatabaseConfig config;
 
 	@Container
-	public GenericContainer<?> postgres = new GenericContainer<>(new DockerImageName("maui/mauidb:latest").toString()).withExposedPorts(5432).waitingFor(Wait.forListeningPort());
+	public GenericContainer<?> postgres = new GenericContainer<>(new DockerImageName("neptune-psql:latest").toString()).withExposedPorts(5432).waitingFor(Wait.forListeningPort());
 
 	@BeforeEach
 	public void setUp() {
 		String address = postgres.getHost();
 		Integer port = postgres.getFirstMappedPort();
-		config = new PostgreSQLConfiguration(address, port, "postgres", "postgres", "maui");
+		config = new PostgreSQLConfiguration(address, port, "postgres", "postgres", "sample");
 	}
 
 	@Test

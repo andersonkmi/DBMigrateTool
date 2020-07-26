@@ -4,6 +4,22 @@ Neptune - Tool for migrating database schema from one server to another
 This is a personal project that aims to help me practice how to retrieve database metadata using JDBC. At the current status
 it is only performing database metadata export function.
 
+## Requirements
+
+The following requirements are necessary to use this project:
+- Docker
+- Java 11
+- Gradle
+
+## Creating the postgresql image for unit testing
+
+Run the following command to create the postgresql container used by the current unit test:
+
+```
+$ cd docker/postgres
+$ docker image build -t neptune-psql:latest .
+```
+
 ## Build
 
 In order to build this project just simply:
